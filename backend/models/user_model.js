@@ -9,7 +9,8 @@ const userSchema = new Schema(
     phoneNumber: { type: String, unique: true },
     password: { type: String },
     resetPassword: {type: String},
-    resetToken: {type: String}
+    resetToken: {type: String},
+    resetTokenExpiresAt: {type: Date}
   },
   {
     timestamps: true,
