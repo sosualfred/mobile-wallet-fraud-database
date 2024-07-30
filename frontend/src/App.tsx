@@ -1,4 +1,4 @@
-
+import Home from "./pages/home"
 
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
 
     <div>
 
-      
+      <Home/>
     </div>
 
   )
