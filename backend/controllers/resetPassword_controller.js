@@ -28,6 +28,7 @@ export const forgotPassword = async (req, res, next) => {
         user.resetToken = hashedOtp;
         user.resetTokenExpiresAt = Date.now() + 1800000  //Token expires in 30mins
         await user.save();
+      
 
 
         // Send OTP via email
@@ -44,7 +45,7 @@ export const forgotPassword = async (req, res, next) => {
             from: 'Momo Fraud Support <fromMomo.com>', // Your email address
             to: user.email,
             subject: 'Password Reset',
-            text: `Please use the following OTP to complete the process of resetting your password:\n\n${otpString}\n\n. This OTP will expire at ${expiresAt.toLocaleAString()}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
+            text: `Please use the following OTP to complete the process of resetting your password:\n\n${otpString}\n\n. If you did not request this, please ignore this email and your password will remain unchanged.\n`
         };
 
         transporter.sendMail(mailOptions, (err) => {
