@@ -1,5 +1,5 @@
 
-
+import Navbar from "./components/Navbar.jsx"
 
 function App() {
 
@@ -7,8 +7,7 @@ function App() {
   return (
 
     <div>
-
-      
+      <Navbar/>   
     </div>
 
   )
