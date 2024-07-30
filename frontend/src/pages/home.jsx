@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CodeXml, FileCode, DatabaseIcon } from 'lucide-react';
 import SearchInput from "../components/searchInput";
 import ApiCard from '../components/apiCard';
+import Navbar from '../components/Navbar';
 import ReportedCard from '../components/reportedCard';
 import DocumentCard from '../components/documentCard';
 
@@ -14,7 +15,7 @@ const Home = () => {
 
     return (
         <div>
-            <p>Navbar goes here</p>
+           <Navbar/>
 
             <h1 className='text-center justify-normal text-3xl font-semibold mt-6 '>Real-time database to curb <br /> mobile money fraud.</h1>
 
@@ -29,7 +30,7 @@ const Home = () => {
 
                     <div className="relative top-14 transform -translate-y-1/2 w-[53.5vw] border-t border-gray-300 "></div>
 
-                    <div className='absolute flex justify-center items-center gap-10 top-[236px] '>
+                    <div className='absolute flex justify-center items-center gap-10 top-[287px] '>
 
                         <div onClick={() => handleLinkClick('API-keys')} className="cursor-pointer  flex flex-col items-center gap-4 py-3 group  z-10">
                             <span className='flex gap-2 text-gray-500'><CodeXml /> API Keys</span>
