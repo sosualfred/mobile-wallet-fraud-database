@@ -3,6 +3,7 @@ import { dbConnection } from "./config/db.js";
 import { userRouter } from "./routes/user_route.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import { passwordRouter } from "./routes/resetPassword_route.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(
 
 // Use routes
 app.use(userRouter);
+app.use(passwordRouter)
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {
