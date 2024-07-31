@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { toJSON } from "@reis/mongoose-to-json";
 
 const userSchema = new Schema(
@@ -10,6 +10,7 @@ const userSchema = new Schema(
     password: { type: String },
     resetToken: { type: String },
     resetTokenExpiresAt: { type: Date },
+    fraudReport: [{ type: Types.ObjectId, ref: "FraudReport" }],
   },
   {
     timestamps: true,
