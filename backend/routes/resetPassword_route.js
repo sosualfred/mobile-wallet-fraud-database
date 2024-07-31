@@ -1,6 +1,8 @@
 import {Router} from "express"
-import { resetPassword } from "../controllers/resetPassword_controller.js";
+import { forgotPassword, verifyCode } from "../controllers/resetPassword_controller.js";
 
 export const passwordRouter = Router();
 
-passwordRouter.post('/api/auth/password/recover', resetPassword)
+passwordRouter.post('/api/auth/password/recover', forgotPassword);
+
+passwordRouter.post('/api/auth/password/verify-code', verifyCode);
