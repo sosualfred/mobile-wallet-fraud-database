@@ -47,7 +47,7 @@ export const deleteFraudReport = async (req, res, next) => {
     });
  
     if (!deletedReport) {
-      return res.status(404).send("Report not found or you do not have permission to delete this report.");
+      return res.status(404).send({ message:"Report not found or you do not have permission to delete this report."});
     }
   
     user.fraudReport.pull(req.params.reportId);
