@@ -28,3 +28,37 @@ export const addFraudReport = async (req, res, next) => {
     message: "Your fraud report has been successfully submitted.",
   });
 };
+
+export const deleteFraudReport = async (req, res, next) => {
+  try {
+    const id = req.session?.user?.id || req?.user?.id;
+    console.log('User ID:', id);
+    console.log('Report ID:', req.params.reportId);
+  
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+  
+    // Find and delete the report where _id matches and user ID matches
+    const deletedReport = await FraudReportModel.findByIdAndDelete({
+      _id: req.params.reportId,
+      user: id
+    });
+ 
+    if (!deletedReport) {
+      return res.status(404).send("Report not found or you do not have permission to delete this report.");
+    }
+  
+    user.fraudReport.pull(req.params.reportId);
+    await user.save();
+  
+    res.status(200).json({
+      message: "Your fraud report has been successfully deleted.",
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+ };
+ 
