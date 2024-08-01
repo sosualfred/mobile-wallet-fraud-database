@@ -29,18 +29,19 @@ export const addFraudReport = async (req, res, next) => {
   });
 };
 
+
 export const deleteFraudReport = async (req, res, next) => {
   try {
     const id = req.session?.user?.id || req?.user?.id;
     console.log('User ID:', id);
     console.log('Report ID:', req.params.reportId);
-  
+     // Find the user to ensure they exist
     const user = await UserModel.findById(id);
     if (!user) {
       return res.status(404).send("User not found");
     }
-  
-    // Find and delete the report where _id matches and user ID matches
+
+     // Find and delete the report where _id matches and user ID matches
     const deletedReport = await FraudReportModel.findByIdAndDelete({
       _id: req.params.reportId,
       user: id
@@ -55,10 +56,53 @@ export const deleteFraudReport = async (req, res, next) => {
   
     res.status(200).json({
       message: "Your fraud report has been successfully deleted.",
+  
+
+export const updateFraudReport = async (req, res, next) => {
+  try {
+    // Validate the request body
+    const { error, value } = fraudReportSchema.validate(req.body);
+    if (error) {
+      return res.status(400).send(error.details[0].message);
+    }
+
+    // Get user ID from session or JWT token
+    const id = req.session?.user?.id || req?.user?.id;
+    console.log('User ID:', id);
+    console.log('Report ID:', req.params.reportId);
+
+    // Find the user to ensure they exist
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    // Find and update the report where _id matches and user ID matches
+    const updateReport = await FraudReportModel.findByIdAndUpdate(
+      { _id: req.params.reportId, user: id },  // Query to find the report
+      value,                                 // Data to update
+      { new: true }                          // Return the updated document
+    );
+
+    // Check if the report was found and updated
+    if (!updateReport) {
+      return res.status(404).send({ message: "Report not found or you do not have permission to update this report." });
+    }
+
+    res.status(200).json({
+      message: "Your fraud report has been successfully updated.",
+      report: updateReport
+
     });
   } catch (error) {
     console.error(error);
     next(error);
   }
+
  };
  
+
+};
+
+
+
