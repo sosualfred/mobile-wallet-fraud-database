@@ -1,4 +1,4 @@
-
+import AdminNav from './components/adminNav'
 import './App.css'
 
 function App() {
@@ -6,7 +6,8 @@ function App() {
 
   return (
     <>
-     
+      <AdminNav />
+
     </>
   )
 }
