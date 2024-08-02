@@ -29,7 +29,6 @@ export const addFraudReport = async (req, res, next) => {
   });
 };
 
-
 export const updateFraudReport = async (req, res, next) => {
   try {
     // Validate the request body
@@ -40,8 +39,8 @@ export const updateFraudReport = async (req, res, next) => {
 
     // Get user ID from session or JWT token
     const id = req.session?.user?.id || req?.user?.id;
-    console.log('User ID:', id);
-    console.log('Report ID:', req.params.reportId);
+    console.log("User ID:", id);
+    console.log("Report ID:", req.params.reportId);
 
     // Find the user to ensure they exist
     const user = await UserModel.findById(id);
@@ -51,19 +50,22 @@ export const updateFraudReport = async (req, res, next) => {
 
     // Find and update the report where _id matches and user ID matches
     const updateReport = await FraudReportModel.findByIdAndUpdate(
-      { _id: req.params.reportId, user: id },  // Query to find the report
-      value,                                 // Data to update
-      { new: true }                          // Return the updated document
+      { _id: req.params.reportId, user: id }, // Query to find the report
+      value, // Data to update
+      { new: true } // Return the updated document
     );
 
     // Check if the report was found and updated
     if (!updateReport) {
-      return res.status(404).send({ message: "Report not found or you do not have permission to update this report." });
+      return res.status(404).send({
+        message:
+          "Report not found or you do not have permission to update this report.",
+      });
     }
 
     res.status(200).json({
       message: "Your fraud report has been successfully updated.",
-      report: updateReport
+      report: updateReport,
     });
   } catch (error) {
     console.error(error);
@@ -71,4 +73,31 @@ export const updateFraudReport = async (req, res, next) => {
   }
 };
 
+export const getAFraudReport = async (req, res, next) => {
+  try {
+    const id = req.session?.user?.id || req?.user?.id;
 
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const aFraudReport = await FraudReportModel.findById(req.params.reportId);
+    if (!aFraudReport) {
+      return res.status(404).send("Report not found");
+    }
+
+    // Ensure the authenticated user is the owner of the report
+    if (aFraudReport.status === "private") {
+      if (!aFraudReport.user.equals(user._id)) {
+        return res
+          .status(403)
+          .send("You do not have permission to view this report");
+      }
+    }
+
+    res.status(200).send(aFraudReport);
+  } catch (error) {
+    next(error);
+  }
+};
