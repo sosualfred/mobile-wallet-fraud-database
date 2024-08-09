@@ -1,6 +1,6 @@
 
-// import Home from "./pages/home"
-import Api from "./pages/api"
+import Home from "./pages/home"
+import Api from "./pages/apikey"
 
 
 
@@ -11,7 +11,7 @@ function App() {
 
     <div>
 
-      {/* <Home/> */}
+      <Home/>
       <Api/>
       
       
