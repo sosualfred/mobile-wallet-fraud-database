@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { generateApiKey } from "../controllers/api_controller.js";
+import {
+  generateApiKey,
+  updateApiDomain,
+} from "../controllers/api_controller.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import { apiKeyRateLimiter } from "../Utils/api_key_rate_limiter.js";
 
@@ -11,3 +14,5 @@ apiRouter.post(
   apiKeyRateLimiter,
   generateApiKey
 );
+
+apiRouter.put("/api/keys/restrict/:keyId", isAuthenticated, updateApiDomain);
