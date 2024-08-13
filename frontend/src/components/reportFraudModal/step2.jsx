@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { X } from "lucide-react";
 
 const Step2FraudReport = ({ 
@@ -11,6 +11,8 @@ const Step2FraudReport = ({
   const [evidenceFile, setEvidenceFile] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const evidenceInputRef = useRef(null);
+  const imageInputRef = useRef(null);
 
   const onClose = () => {
     setIsSubmitted(false);
@@ -27,10 +29,27 @@ const Step2FraudReport = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-    };
+  };
 
   const handleChange = (e) => {
     updateFormData({ [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (type === 'image') {
+        setImageFile(file);
+        updateFormData({ fraudImage: file });
+      } else if (type === 'evidence') {
+        setEvidenceFile(file);
+        updateFormData({ fraudEvidence: file });
+      }
+    }
+  };
+
+  const triggerFileInput = (inputRef) => {
+    inputRef.current.click();
   };
 
   return (
@@ -62,7 +81,6 @@ const Step2FraudReport = ({
 
           <p className="text-lg text-gray-600 mb-4">Details of the person and about the fraud.</p>
           
-          {/* Phone number */}
           <div className="mb-4">
             <div className="flex flex-col">
               <label htmlFor="fraudPhoneNumber" className="mb-1 text-gray-700">Phone number</label>
@@ -77,7 +95,6 @@ const Step2FraudReport = ({
             </div>
           </div>
 
-          {/* Network */}
           <div className="mb-4">
             <div className="flex flex-col">
               <label htmlFor="mobileMoneyProvider" className="mb-1 text-gray-700">Mobile money provider</label>
@@ -122,8 +139,23 @@ const Step2FraudReport = ({
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Image of fraud person (Optional)</label>
             <div className="flex items-center border border-gray-300 rounded-md bg-gray-100 w-full">
-              <button className="bg-gray-800 text-white px-4 rounded-sm py-2 text-sm h-full">Choose file</button>
-              <span className="text-gray-700 ml-2 text-sm flex-grow">No file chosen</span>
+              <input
+                type="file"
+                ref={imageInputRef}
+                onChange={(e) => handleFileChange(e, 'image')}
+                className="hidden"
+                accept="image/*"
+              />
+              <button
+                type="button"
+                onClick={() => triggerFileInput(imageInputRef)}
+                className="bg-gray-800 text-white px-4 rounded-sm py-2 text-sm h-full"
+              >
+                Choose file
+              </button>
+              <span className="text-gray-700 ml-2 text-sm flex-grow">
+                {imageFile ? imageFile.name : 'No file chosen'}
+              </span>
             </div>
           </div>
 
@@ -143,8 +175,22 @@ const Step2FraudReport = ({
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Evidence of fraud</label>
             <div className="flex items-center border border-gray-300 rounded-md bg-gray-100 w-full">
-              <button className="bg-gray-800 text-white px-4 rounded-sm py-2 text-sm h-full">Choose file</button>
-              <span className="text-gray-700 ml-2 text-sm flex-grow">No file chosen</span>
+              <input
+                type="file"
+                ref={evidenceInputRef}
+                onChange={(e) => handleFileChange(e, 'evidence')}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => triggerFileInput(evidenceInputRef)}
+                className="bg-gray-800 text-white px-4 rounded-sm py-2 text-sm h-full"
+              >
+                Choose file
+              </button>
+              <span className="text-gray-700 ml-2 text-sm flex-grow">
+                {evidenceFile ? evidenceFile.name : 'No file chosen'}
+              </span>
             </div>
           </div>
 
