@@ -6,6 +6,7 @@ import MongoStore from "connect-mongo";
 import { passwordRouter } from "./routes/resetPassword_route.js";
 import { fraudReportRouter } from "./routes/fraudReport_route.js";
 import { apiRouter } from "./routes/api_route.js";
+import "dotenv/config";
 
 const app = express();
 
