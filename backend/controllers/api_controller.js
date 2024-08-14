@@ -64,6 +64,7 @@ export const generateApiKey = async (req, res, next) => {
 };
 
 
+
 export const getApiKeys = async (req, res, next)=>{
   try {
     const id = req.session?.user?.id || req?.user?.id;
@@ -80,6 +81,31 @@ export const getApiKeys = async (req, res, next)=>{
   } catch (error) {
     next(error)
   }
-}
+  
+export const deleteApi = async(req, res, next) => {
+  try {
+    const id = req.session?.user?.id || req?.user?.id;
+    console.log("User ID:", id);
+    console.log("API Key ID:", req.params.id);
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const apiKey = await ApiKeyModel.findOne({_id: req.params.id ,user: id});
+    console.log("API Key Found:", apiKey);
 
+    if(!apiKey){
+      return res.status(404).send("You Do Not Have Permission To Delete This API Key or It Does Not Exist.");
+    }
+    // DELETE THE API KEY
+    await ApiKeyModel.findByIdAndDelete(req.params.id);
+
+    user.apiKey.pull(req.params.id);
+    await user.save();
+
+    res.status(200).json({message: 'API Key Deleted Successfully'});
+  } catch (error) {
+    next(error)
+  }
+}
 
