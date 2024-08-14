@@ -5,6 +5,8 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import { passwordRouter } from "./routes/resetPassword_route.js";
 import { fraudReportRouter } from "./routes/fraudReport_route.js";
+import { apiRouter } from "./routes/api_route.js";
+import "dotenv/config";
 
 const app = express();
 
@@ -28,6 +30,7 @@ app.use(
 app.use(userRouter);
 app.use(passwordRouter);
 app.use(fraudReportRouter);
+app.use(apiRouter);
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {
