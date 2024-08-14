@@ -64,7 +64,29 @@ export const generateApiKey = async (req, res, next) => {
 };
 
 
+
+
+export const getApiKeys = async (req, res, next)=>{
+  try {
+    const id = req.session?.user?.id || req?.user?.id;
+
+        const user = await UserModel.findById(id);
+        if (!user) {
+          return res.status(404).send("User not found");
+        }
+    const allApiKeys = await ApiKeyModel.find({user:id})
+    if(!allApiKeys){
+      return res.status(404).json({ message: "You do not have any API keys or do not have permission to view them." });
+    }
+    res.status(200).json({ message: "success", apiKey: allApiKeys });
+  } catch (error) {
+    next(error)
+  }
+  
+
+
 export const updateApiDomain = async (req, res, next) => {
+
   try {
     // Validate the request body
     const { error, value } = apiDomainSchema.validate(req.body);
@@ -143,3 +165,7 @@ export const deleteApi = async(req, res, next) => {
     next(error)
   }
 }
+
+
+
+
