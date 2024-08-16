@@ -65,7 +65,6 @@ const ApiKey = () => {
 
                         <Button variant="solid" style={{
                             width: '97%', height: '100%', color: 'white', borderRadius: '0.375rem', marginTop: '1rem', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center',
-                            textAlign: 'center'
                         }}>Create Key</Button>
                     </div>
                 </form>
