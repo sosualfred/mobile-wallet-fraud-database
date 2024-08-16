@@ -34,7 +34,7 @@ const Step1UserInfo = ({ formData, updateFormData, nextStep, prevStep, onClose }
               name="firstName"
               value={formData.firstName || ''}
               onChange={handleChange}
-              placeholder="e.g Malik"
+              placeholder="e.g Isaac"
               className="border p-2 rounded-md bg-gray-100 border-gray-300 w-50"
             />
           </div>
@@ -45,7 +45,7 @@ const Step1UserInfo = ({ formData, updateFormData, nextStep, prevStep, onClose }
               name="lastName"
               value={formData.lastName || ''}
               onChange={handleChange}
-              placeholder="e.g Kolade"
+              placeholder="e.g Osei"
               className="border p-2 rounded-md bg-gray-100 border-gray-300 w-50"
             />
           </div>
@@ -60,7 +60,7 @@ const Step1UserInfo = ({ formData, updateFormData, nextStep, prevStep, onClose }
               name="email"
               value={formData.email || ''}
               onChange={handleChange}
-              placeholder="e.g malikkolade@gmail.com"
+              placeholder="e.g isaacosei@gmail.com"
               className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"
             />
           </div>
