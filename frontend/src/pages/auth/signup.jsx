@@ -27,14 +27,14 @@ function Signup() {
           <div className="flex gap-4 mb-4">
             <TextInput
               label="First name"
-              placeholder="e.g Malik"
+              placeholder="e.g Isaac"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"
             />
             <TextInput
               label="Last name"
-              placeholder="e.g Kolade"
+              placeholder="e.g Osei"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"
@@ -43,7 +43,7 @@ function Signup() {
           <TextInput
             label="Email address"
             type="email"
-            placeholder="e.g malikkolade@gmail.com"
+            placeholder="e.g isaacosei@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"

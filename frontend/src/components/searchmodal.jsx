@@ -29,10 +29,10 @@ const SearchModal = () => {
                         </div>
                     </div>
                     <h1 className='text-gray-400 text-[18px]'>Comments</h1>
-                    <h2 className='text-[#4881F4] text-[18px]'>Reported by: Malik Kolade</h2>
+                    <h2 className='text-[#4881F4] text-[18px]'>Reported by: Isaac Osei</h2>
                     <p className='text-gray-400'>With less than a month to go before European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agrrements to comply</p>
 
-                    <h2 className='text-[#4881F4] text-[18px]'>Commented by: Malik Kolade</h2>
+                    <h2 className='text-[#4881F4] text-[18px]'>Commented by: Isaac Osei</h2>
                     <p className='text-gray-400'>With less than a month to go before European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agrrements to comply</p>
 
                     <Link className='text-blue-700 text-[17px] underline underline-offset-auto  font-semibold'> 7 more comment </Link>

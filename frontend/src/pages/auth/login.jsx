@@ -24,7 +24,7 @@ function Login() {
             <TextInput
               label="Email address"
               type="email"
-              placeholder="e.g malikkolade@gmail.com"
+              placeholder="e.g isaacosei@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"

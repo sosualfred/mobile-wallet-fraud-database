@@ -17,7 +17,7 @@ function Verification() {
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="w-full max-w-md p-8 bg-white border-2 border-gray-400 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Verification</h2>
-          <p className="mb-4">We have sent an OTP to <span className="font-semibold">malikkolade@gmail.com</span>.</p>
+          <p className="mb-4">We have sent an OTP to <span className="font-semibold">isaacosei@gmail.com</span>.</p>
           <form onSubmit={handleVerification}>
             <TextInput
               label="OTP"
