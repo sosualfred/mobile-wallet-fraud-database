@@ -7,15 +7,15 @@ import ReportedCard from '../components/reportedCard';
 import DocumentCard from '../components/documentCard';
 
 const Home = () => {
+    
     const [visibleCard, setVisibleCard] = useState('API-keys');
-
     const handleLinkClick = (cardId) => {
         setVisibleCard(cardId);
     };
 
     return (
         <div>
-           <Navbar/>
+            <Navbar />
 
             <h1 className='text-center justify-normal text-3xl font-semibold mt-6 '>Real-time database to curb <br /> mobile money fraud.</h1>
 

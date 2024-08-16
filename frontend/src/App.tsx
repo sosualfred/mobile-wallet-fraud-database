@@ -2,6 +2,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/home';
 import AccountPage from './pages/accountpage';
+
+import ApiKey from "./pages/apikey"
+
 import SearchModal from './components/searchmodal';
 import SubmitReport from './components/submitreport';
 import UpVote from './components/upvote';
@@ -25,7 +28,6 @@ function App() {
         <Route path="/forgot-password" element={<RecoverPassword />} />
         <Route path="/verification" element={<Verification />} />
         <Route path="/new-password" element={<SetNewPassword />} />
-
       </Routes>
     </Router>
   );
