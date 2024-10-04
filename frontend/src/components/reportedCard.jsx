@@ -1,115 +1,207 @@
-import React, { useState } from 'react';
-import { Calendar, ExternalLink, Square, Trash2 } from 'lucide-react';
-import SearchInput from './searchInput';
+// src/components/ReportedCard.jsx
+import React, { useState, useEffect } from "react";
+import { Calendar, ExternalLink, Trash2 } from "lucide-react";
+import SearchInput from "./SearchInput";
+import { getUserFraudReports } from "../services/api";
 
 const ReportedCard = () => {
-  const data = [
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Public", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Public", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Public", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Public", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-    { name: "Odoh Craig", phone: "09059784163", network: "MTN", date: "April 15 2023", status: "Private", comment: "Duped Someone of GHS12000, Sent......." },
-  ];
-
+  const [allReports, setAllReports] = useState([]);
+  const [displayedReports, setDisplayedReports] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    phoneNumber: "",
+    status: "All status",
+    timeframe: "All time",
+  });
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  useEffect(() => {
+    fetchReports();
+  }, [filters]);
+
+  useEffect(() => {
+    paginateReports();
+  }, [allReports, currentPage]);
+
+  const fetchReports = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const params = {};
+
+      if (filters.phoneNumber.trim() !== "") {
+        params.phoneNumber = filters.phoneNumber.trim();
+      }
+      if (filters.status !== "All status") {
+        params.status = filters.status;
+      }
+      if (filters.timeframe !== "All time") {
+        params.timeframe = filters.timeframe;
+      }
+
+      const response = await getUserFraudReports(params);
+      setAllReports(response.reports);
+      setTotalPages(Math.ceil(response.reports.length / itemsPerPage));
+      setCurrentPage(1);
+    } catch (err) {
+      console.error("Error fetching reports:", err);
+      setError(
+        err.message || "Failed to fetch reports. Please try again later."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const paginateReports = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setDisplayedReports(allReports.slice(startIndex, endIndex));
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
+
+  const handleSearch = (searchTerm) => {
+    setFilters((prevFilters) => ({ ...prevFilters, phoneNumber: searchTerm }));
+  };
+
+  if (isLoading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-4 text-red-500">{error}</div>;
+  }
 
   return (
-    <div className="">
-      <div className="flex min-w-fit items-center justify-evenly gap-[435px]">
-        <h1 className="text-xl font-semibold">100 Reported Cases</h1>
-        <div className='flex gap-2 pr-6'>
-          <SearchInput className="w-full h-10 max-w-xl border border-gray-400 rounded-md shadow-sm pl-10" />
-          <select className='border border-gray-400 w-24 h-10 rounded-md shadow-sm' name="category" id="category">
-            <option>All Status</option>
-            <option>Private</option>
-            <option>Public</option>
+    <div className="container mx-auto p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-semibold">
+          {allReports.length} Reported Cases
+        </h1>
+        <div className="flex gap-2">
+          <SearchInput
+            onSearch={handleSearch}
+            className="w-64"
+            placeholder="Search phone number"
+          />
+          <select
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+            className="border border-gray-300 rounded-md px-3 py-2"
+          >
+            <option value="All status">All Status</option>
+            <option value="Public">Public</option>
+            <option value="Private">Private</option>
           </select>
-          <select className='border w-32 h-10 border-gray-400 rounded-md shadow-sm' name="time" id="time">
-            <option> All time</option>
-            <option>Today</option>
-            <option>Last 7days</option>
-            <option>Last Month</option>
+          <select
+            name="timeframe"
+            value={filters.timeframe}
+            onChange={handleFilterChange}
+            className="border border-gray-300 rounded-md px-3 py-2"
+          >
+            <option value="All time">All time</option>
+            <option value="Today">Today</option>
+            <option value="Last 7 days">Last 7 days</option>
+            <option value="Last month">Last month</option>
           </select>
         </div>
       </div>
 
-      <div className="container mx-auto p-4">
-        <table className="w-[98%] bg-white border-l-1 border-r-1 border border-gray-300 rounded-lg overflow-hidden">
-          <thead className='h-12 flex-1 gap-6'>
-            <tr>
-              <th className="py-2 px-4  bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">  NAME</th>
-              <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">PHONE NUMBER</th>
-              <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">NETWORK</th>
-              <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">DATE REPORTED</th>
-              <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">STATUS</th>
-              <th className="py-2 px-4 pl-20 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">COMMENT</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item, index) => (
-              <tr key={index} className=''>
-                <td className="py-2 px-4 border-b border-gray-300">   {item.name}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{item.phone}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{item.network}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{item.date}</td>
-                <td className="py-0 px-0 border-b pl-3 border-gray-300">
-                  <span className={`inline-block px-2 py-1 text-xs font-medium w-16 text-center rounded-lg ${item.status === 'Private' ? 'text-red-600 bg-red-100' : 'text-green-800 bg-green-100'}`}>
-                    {item.status}
-                  </span>
-                </td>
-                <td className="py-2 px-4 border-b  border-gray-300 pl-20 flex gap-6">
-                  {item.comment} <ExternalLink className='text-blue-600 w-5' /> <Trash2 className='text-red-700 w-5' />
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td colSpan="6" className="py-2  px-4 pt-4 text-center flex justify-center items-center ">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 mx-1 bg-gray-200 rounded-md"
+      <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600">
+              NAME
+            </th>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600">
+              PHONE NUMBER
+            </th>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600">
+              NETWORK
+            </th>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600">
+              DATE REPORTED
+            </th>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600">
+              STATUS
+            </th>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600">
+              COMMENT
+            </th>
+            <th className="py-3 px-4 text-left font-semibold text-gray-600"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayedReports.map((report) => (
+            <tr key={report._id} className="border-t border-gray-200">
+              <td className="py-3 px-4">
+                {report.fraudFirstName} {report.fraudLastName}
+              </td>
+              <td className="py-3 px-4">{report.fraudPhoneNumber}</td>
+              <td className="py-3 px-4">{report.mobileMoneyProvider}</td>
+              <td className="py-3 px-4">
+                <Calendar className="inline mr-2" size={16} />
+                {new Date(report.dateReported).toLocaleDateString()}
+              </td>
+              <td className="py-3 px-4">
+                <span
+                  className={`px-2 py-1 rounded-full text-xs ${
+                    report.status === "Public"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
                 >
-                  &lt;
-                </button>
-                {[...Array(totalPages)].map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handlePageChange(index + 1)}
-                    className={`px-4 py-2 mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 mx-1 bg-gray-200 rounded-md"
-                >
-                  &gt;
-                </button>
+                  {report.status}
+                </span>
+              </td>
+              <td className="py-3 px-4">
+                {report.fraudDescription && report.fraudDescription.length > 30
+                  ? `${report.fraudDescription.substring(0, 30)}...`
+                  : report.fraudDescription || "N/A"}
+              </td>
+              <td className="py-3 px-4">
+                <div className="flex space-x-2">
+                  <ExternalLink
+                    className="text-blue-500 cursor-pointer"
+                    size={16}
+                  />
+                  <Trash2 className="text-red-500 cursor-pointer" size={16} />
+                </div>
               </td>
             </tr>
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 ${
+              currentPage === index + 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200"
+            } rounded`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
-}
+};
 
 export default ReportedCard;

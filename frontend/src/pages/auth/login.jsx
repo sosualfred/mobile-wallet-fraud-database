@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
-import TextInput from '../../components/textInput';
-import PasswordInput from '../../components/passwordInput';
-import Button from '../../components/button';
-import Navbar from '../../components/Navbar';
+// src/pages/auth/login.jsx
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
+import TextInput from "../../components/textInput";
+import Button from "../../components/button";
+import Navbar from "../../components/Navbar";
+import { useAuth } from "../../hooks/useAuth";
+
+const schema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [apiError, setApiError] = useState(null);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Handle login logic here
+  const onSubmit = async (data) => {
+    try {
+      setApiError(null);
+      await login(data);
+      window.location.reload(); // Force a refresh after successful login
+    } catch (error) {
+      console.error("Login error:", error);
+      setApiError(error.message || "An error occurred during login");
+    }
   };
 
   return (
@@ -20,38 +43,52 @@ function Login() {
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="w-full max-w-md p-8 bg-white border-2 border-gray-400 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">Login to your account</h2>
-          <form onSubmit={handleLogin}>
+          {apiError && (
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+              role="alert"
+            >
+              <span className="block sm:inline">{apiError}</span>
+            </div>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)}>
             <TextInput
               label="Email address"
               type="email"
               placeholder="e.g isaacosei@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"
+              {...register("email")}
+              error={errors.email?.message}
             />
-            <PasswordInput
+            <TextInput
               label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full pr-10"
+              type="password"
+              placeholder="Enter your password"
+              {...register("password")}
+              error={errors.password?.message}
             />
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                  className="mr-2"
-                />
+                <input type="checkbox" id="rememberMe" className="mr-2" />
                 <label htmlFor="rememberMe">Remember me</label>
               </div>
-              <a href="/forgot-password" className="text-blue-600">Lost Password?</a>
+              <a href="/forgot-password" className="text-blue-600">
+                Lost Password?
+              </a>
             </div>
             <div className="flex justify-center mb-4">
-              <button className="bg-blue-700  hover:bg-blue-800 text-white text-sm rounded-md h-10 w-full" type="submit">Login</button>
+              <Button
+                className="bg-blue-700 hover:bg-blue-800 text-white text-sm rounded-md h-10 w-full"
+                type="submit"
+              >
+                Login
+              </Button>
             </div>
-            <p className="pt-2">Don't have an account? <a href="/signup" className="text-blue-600">Sign up</a></p>
+            <p className="pt-2">
+              Don't have an account?{" "}
+              <a href="/signup" className="text-blue-600">
+                Sign up
+              </a>
+            </p>
           </form>
         </div>
       </div>

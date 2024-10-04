@@ -1,8 +1,7 @@
-
+// src/components/button.tsx
+import React from 'react';
 
 type Props = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
-
-
     variant?: 'solid' | 'outline';
     onClick?: () => void;
     icon?: React.ElementType;
@@ -39,7 +38,3 @@ const Button: React.FunctionComponent<Props> = (props) => {
 }
 
 export default Button;
-
-
-
-
