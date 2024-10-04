@@ -19,3 +19,5 @@ const SearchInput = ({ className = "", ...props }) => {
 };
 
 export default SearchInput;
+
+// what is up with you
