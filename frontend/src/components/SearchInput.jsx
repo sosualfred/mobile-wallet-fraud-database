@@ -1,4 +1,3 @@
-// src/components/SearchInput.jsx
 import React from "react";
 import { Search } from "lucide-react";
 
@@ -19,5 +18,3 @@ const SearchInput = ({ className = "", ...props }) => {
 };
 
 export default SearchInput;
-
-// what is up with you

@@ -1,8 +1,9 @@
+// src/pages/auth/signup.jsx
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/textInput";
 import Button from "../../components/button";
 import Navbar from "../../components/Navbar";
@@ -32,14 +33,14 @@ function Signup() {
     resolver: yupResolver(schema),
   });
   const { signup } = useAuth();
-  const navigate = useNavigate();
   const [apiError, setApiError] = useState(null);
 
   const onSubmit = async (data) => {
     try {
       setApiError(null);
       await signup(data);
-      navigate("/");
+      window.location.reload();
+      // The user will be automatically logged in and redirected to the home page
     } catch (error) {
       console.error("Signup error:", error);
       setApiError(error.message || "An error occurred during signup");
