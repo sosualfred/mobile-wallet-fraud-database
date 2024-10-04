@@ -1,58 +1,13 @@
-// src/components/reportFraudModal/reportFraudModal.jsx
-
 import React, { useState } from "react";
 import Step1UserInfo from "./step1";
 import Step2FraudReport from "./step2";
-import { submitFraudReport } from "../../services/api";
-import { useAuth } from "../../hooks/useAuth";
+import { X, AlertCircle } from "lucide-react";
 
 const FraudReportModal = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAlreadyReported, setIsAlreadyReported] = useState(false);
-  const [error, setError] = useState(null);
-  const { user, isAuthenticated } = useAuth();
-
-  const updateFormData = (newData) => {
-    setFormData((prevData) => ({ ...prevData, ...newData }));
-  };
-
-  const handleSubmit = async (step2Data) => {
-    try {
-      setError(null);
-      let finalSubmissionData;
-
-      if (isAuthenticated && user) {
-        // If authenticated, use user data for reporter info
-        finalSubmissionData = {
-          ...step2Data,
-          reporterFirstName: user.firstName,
-          reporterLastName: user.lastName,
-          reporterEmail: user.email,
-          reporterPhoneNumber: user.phoneNumber,
-        };
-      } else {
-        // If not authenticated, combine Step 1 and Step 2 data
-        finalSubmissionData = {
-          ...step2Data,
-          reporterFirstName: formData.firstName,
-          reporterLastName: formData.lastName,
-          reporterEmail: formData.email,
-          reporterPhoneNumber: formData.phoneNumber,
-        };
-      }
-
-      // Remove the user field if it exists
-      delete finalSubmissionData.user;
-
-      const response = await submitFraudReport(finalSubmissionData);
-      console.log("Form submitted:", response);
-      setIsSubmitted(true);
-    } catch (err) {
-      setError(err.message || "An error occurred while submitting the report");
-    }
-  };
 
   const handleNext = () => {
     setCurrentStep(2);
@@ -62,18 +17,29 @@ const FraudReportModal = ({ isOpen, onClose }) => {
     setCurrentStep(1);
   };
 
+  const handleSubmit = async (step2Data) => {
+    console.log("Form submitted:", { ...formData, ...step2Data });
+    setIsSubmitted(true);
+  };
+
+  const updateFormData = (newData) => {
+    setFormData((prevData) => ({ ...prevData, ...newData }));
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg h-50 shadow-lg w-full max-w-2xl">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-bold">Report Fraudulent Number</h2>
+          <h2 className="text-xl sm:text-2xl font-bold">
+            Report Fraudulent Number
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
           >
-            {/* Add an X icon here if needed */}
+            <X className="h-6 w-6" />
           </button>
         </div>
         <div className="p-6">
@@ -84,8 +50,7 @@ const FraudReportModal = ({ isOpen, onClose }) => {
                   formData={formData}
                   updateFormData={updateFormData}
                   nextStep={handleNext}
-                  isAuthenticated={isAuthenticated}
-                  user={user}
+                  prevStep={onClose}
                 />
               )}
               {currentStep === 2 && (
@@ -102,7 +67,7 @@ const FraudReportModal = ({ isOpen, onClose }) => {
           ) : (
             <div className="text-center mt-8">
               <div className="flex flex-col items-center mt-4">
-                {/* Add an success icon here if needed */}
+                <AlertCircle className="h-12 w-12 text-green-400 mb-4" />
                 <p className="mb-6 text-lg text-gray-700">
                   Your fraud report has been submitted successfully. When proper
                   vetting has been done, this person's profile will become
@@ -110,7 +75,7 @@ const FraudReportModal = ({ isOpen, onClose }) => {
                 </p>
                 <button
                   onClick={onClose}
-                  className="border border-gray-400 text-black px-6 py-3 rounded-md text-lg font-semibold hover:bg-blue-600 transition duration-200"
+                  className="border border-gray-400 text-black px-6 py-3 rounded-md text-lg font-semibold hover:bg-blue-600 hover:text-white transition duration-200"
                 >
                   Close
                 </button>

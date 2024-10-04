@@ -1,4 +1,3 @@
-// src/components/ReportedCard.jsx
 import React, { useState, useEffect } from "react";
 import { Calendar, ExternalLink, Trash2 } from "lucide-react";
 import SearchInput from "./SearchInput";
@@ -85,21 +84,21 @@ const ReportedCard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h1 className="text-xl font-semibold mb-4 md:mb-0">
           {allReports.length} Reported Cases
         </h1>
-        <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
           <SearchInput
             onSearch={handleSearch}
-            className="w-64"
+            className="w-full md:w-64"
             placeholder="Search phone number"
           />
           <select
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-gray-300 rounded-md px-3 py-2 w-full md:w-auto"
           >
             <option value="All status">All Status</option>
             <option value="Public">Public</option>
@@ -109,7 +108,7 @@ const ReportedCard = () => {
             name="timeframe"
             value={filters.timeframe}
             onChange={handleFilterChange}
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-gray-300 rounded-md px-3 py-2 w-full md:w-auto"
           >
             <option value="All time">All time</option>
             <option value="Today">Today</option>
@@ -119,71 +118,74 @@ const ReportedCard = () => {
         </div>
       </div>
 
-      <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600">
-              NAME
-            </th>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600">
-              PHONE NUMBER
-            </th>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600">
-              NETWORK
-            </th>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600">
-              DATE REPORTED
-            </th>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600">
-              STATUS
-            </th>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600">
-              COMMENT
-            </th>
-            <th className="py-3 px-4 text-left font-semibold text-gray-600"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {displayedReports.map((report) => (
-            <tr key={report._id} className="border-t border-gray-200">
-              <td className="py-3 px-4">
-                {report.fraudFirstName} {report.fraudLastName}
-              </td>
-              <td className="py-3 px-4">{report.fraudPhoneNumber}</td>
-              <td className="py-3 px-4">{report.mobileMoneyProvider}</td>
-              <td className="py-3 px-4">
-                <Calendar className="inline mr-2" size={16} />
-                {new Date(report.dateReported).toLocaleDateString()}
-              </td>
-              <td className="py-3 px-4">
-                <span
-                  className={`px-2 py-1 rounded-full text-xs ${
-                    report.status === "Public"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {report.status}
-                </span>
-              </td>
-              <td className="py-3 px-4">
-                {report.fraudDescription && report.fraudDescription.length > 30
-                  ? `${report.fraudDescription.substring(0, 30)}...`
-                  : report.fraudDescription || "N/A"}
-              </td>
-              <td className="py-3 px-4">
-                <div className="flex space-x-2">
-                  <ExternalLink
-                    className="text-blue-500 cursor-pointer"
-                    size={16}
-                  />
-                  <Trash2 className="text-red-500 cursor-pointer" size={16} />
-                </div>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600">
+                NAME
+              </th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600">
+                PHONE NUMBER
+              </th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600">
+                NETWORK
+              </th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600">
+                DATE REPORTED
+              </th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600">
+                STATUS
+              </th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600">
+                COMMENT
+              </th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-600"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {displayedReports.map((report) => (
+              <tr key={report._id} className="border-t border-gray-200">
+                <td className="py-3 px-4">
+                  {report.fraudFirstName} {report.fraudLastName}
+                </td>
+                <td className="py-3 px-4">{report.fraudPhoneNumber}</td>
+                <td className="py-3 px-4">{report.mobileMoneyProvider}</td>
+                <td className="py-3 px-4">
+                  <Calendar className="inline mr-2" size={16} />
+                  {new Date(report.dateReported).toLocaleDateString()}
+                </td>
+                <td className="py-3 px-4">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      report.status === "Public"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {report.status}
+                  </span>
+                </td>
+                <td className="py-3 px-4">
+                  {report.fraudDescription &&
+                  report.fraudDescription.length > 30
+                    ? `${report.fraudDescription.substring(0, 30)}...`
+                    : report.fraudDescription || "N/A"}
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex space-x-2">
+                    <ExternalLink
+                      className="text-blue-500 cursor-pointer"
+                      size={16}
+                    />
+                    <Trash2 className="text-red-500 cursor-pointer" size={16} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex justify-center mt-4">
         {[...Array(totalPages)].map((_, index) => (

@@ -1,14 +1,14 @@
-// src/components/Navbar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu } from "@headlessui/react";
-import { AlignJustify, User } from "lucide-react";
+import { AlignJustify, User, X } from "lucide-react";
 import Button from "./button";
 import FraudReportModal from "./reportFraudModal/reportFraudModal";
 import { useAuth } from "../hooks/useAuth";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
   const handleOpenModal = () => {
@@ -19,6 +19,10 @@ const Navbar = () => {
     setIsModalOpen(false);
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const getUserInitials = () => {
     if (user && user.firstName && user.lastName) {
       return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
@@ -27,16 +31,37 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between p-4">
-      <Link to="/" className="text-blue-700 text-xl font-semibold">
-        FraudWatch
-      </Link>
-      <div className="flex items-center space-x-4">
-        <Button variant="solid" onClick={handleOpenModal}>
+    <nav className="flex flex-col md:flex-row items-center justify-between p-4 bg-white shadow-md">
+      <div className="flex items-center justify-between w-full md:w-auto mb-4 md:mb-0">
+        <Link to="/" className="text-blue-700 text-xl font-semibold">
+          FraudWatch
+        </Link>
+        <button
+          className="md:hidden"
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? (
+            <X className="w-6 h-6 text-gray-600" />
+          ) : (
+            <AlignJustify className="w-6 h-6 text-gray-600" />
+          )}
+        </button>
+      </div>
+      <div
+        className={`${
+          isMenuOpen ? "flex" : "hidden"
+        } md:flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto`}
+      >
+        <Button
+          variant="solid"
+          onClick={handleOpenModal}
+          className="w-full md:w-auto"
+        >
           Report fraudulent number
         </Button>
-        <Menu as="div" className="relative">
-          <Menu.Button className="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300">
+        <Menu as="div" className="relative w-full md:w-auto">
+          <Menu.Button className="flex items-center justify-center w-full md:w-10 h-10 rounded-lg border border-gray-300">
             {user ? (
               <span className="text-sm font-medium">{getUserInitials()}</span>
             ) : (

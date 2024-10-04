@@ -1,5 +1,4 @@
 // src/components/submitreport.jsx
-
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Paperclip, Send, ThumbsDown } from "lucide-react";
@@ -56,86 +55,81 @@ const SubmitReport = () => {
   };
 
   if (!reportData) {
-    return <div>Loading...</div>;
+    return <div className="text-center py-10">Loading...</div>;
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
 
-      <div className="flex items-center gap-5 pl-28 pt-8">
-        <button onClick={() => navigate("/")}>
-          <ArrowLeft className="text-blue-900" />
-        </button>
-        <h1 className="text-[23px] font-semibold">Search Results</h1>
-      </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center gap-5 mb-6">
+          <button onClick={() => navigate("/")} className="text-blue-900">
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-2xl font-semibold">Search Results</h1>
+        </div>
 
-      <div className="flex justify-center items-center min-h-screen pt-20">
-        <div className="border border-gray-300 outline-none w-[45vw] h-auto flex flex-col gap-5 rounded-lg p-4 bg-white shadow-lg">
-          <div className="flex flex-col justify-center items-center pt-4">
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <div className="flex flex-col items-center mb-6">
             <p className="text-gray-500 mb-2">Profile</p>
             {reportData.fraudImage ? (
               <img
                 src={reportData.fraudImage}
                 alt="Profile"
-                className="rounded-full w-[90px] h-[90px] object-cover"
+                className="rounded-full w-24 h-24 object-cover mb-2"
               />
             ) : (
-              <div className="rounded-full w-[90px] h-[90px] bg-gray-200 flex items-center justify-center text-gray-400 text-2xl font-bold">
+              <div className="rounded-full w-24 h-24 bg-gray-200 flex items-center justify-center text-gray-400 text-2xl font-bold mb-2">
                 {reportData.fraudFirstName[0]}
                 {reportData.fraudLastName[0]}
               </div>
             )}
-            <p className="text-black text-xl font-semibold mt-2">
+            <p className="text-xl font-semibold">
               {reportData.fraudFirstName} {reportData.fraudLastName}
             </p>
-            <p>
+            <p className="text-gray-600">
               {reportData.mobileMoneyProvider} {reportData.fraudPhoneNumber}
             </p>
             <div className="flex gap-3 mt-4">
-              <span className="border outline-none flex justify-center items-center gap-2 bg-slate-200 w-60 rounded-md">
+              <span className="bg-gray-200 px-3 py-1 rounded-full text-sm">
                 Date Reported:{" "}
-                <p className="font-semibold">
+                <span className="font-semibold">
                   {new Date(reportData.dateReported).toLocaleDateString()}
-                </p>
+                </span>
               </span>
-              <span className="border flex gap-2 outline-none bg-red-300 w-24 text-red-900 rounded-md">
-                <ThumbsDown className="w-5" /> 10 votes
+              <span className="bg-red-200 text-red-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <ThumbsDown className="w-4 h-4 mr-1" /> 10 votes
               </span>
             </div>
           </div>
 
-          <h1 className="text-gray-400 text-[18px]">Comments</h1>
-          <h2 className="text-[#4881F4] text-[18px]">
-            Reported by: Isaac Osei
-          </h2>
-          <p className="text-gray-400">{reportData.fraudDescription}</p>
+          <h2 className="text-xl font-semibold mb-4">Comments</h2>
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-blue-600 mb-2">
+              Reported by: Isaac Osei
+            </h3>
+            <p className="text-gray-700">{reportData.fraudDescription}</p>
+          </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="w-full h-[30vh] mx-auto rounded relative"
-          >
-            <div className="relative h-full">
-              <textarea
-                name="report"
-                value={newReport}
-                onChange={(e) => setNewReport(e.target.value)}
-                placeholder="Write reasons here, attach evidence if available...."
-                className="h-[calc(100%-56px)] bg-gray-100 rounded-lg border border-gray-300 outline-none w-full p-2 pt-6 pb-16 relative"
-                required
-              />
-
-              <div className="absolute bottom-6 bg-gray-100 left-0 w-full h-20 flex items-center justify-between px-2 py-2 border border-gray-300 rounded-b-lg">
-                <button
-                  type="submit"
-                  className="flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  disabled={isSubmitting}
-                >
-                  <Send className="text-white" />{" "}
-                  {isSubmitting ? "Submitting..." : "Submit Report"}
-                </button>
-                <Paperclip className="text-gray-500" />
-              </div>
+          <form onSubmit={handleSubmit} className="mt-8">
+            <textarea
+              value={newReport}
+              onChange={(e) => setNewReport(e.target.value)}
+              placeholder="Write your report here..."
+              className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            <div className="flex justify-between items-center mt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                {isSubmitting ? "Submitting..." : "Submit Report"}
+              </button>
+              <Paperclip className="text-gray-500 cursor-pointer" />
             </div>
           </form>
         </div>
