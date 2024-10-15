@@ -10,12 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
+    "@heroicons/react": "^2.1.5",
     "lucide-react": "^0.416.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.26.0",
-    "react-table": "^7.8.0"
+    "react-table": "^7.8.0",
+    "axios": "^0.21.1",
+    "react-hook-form": "^7.22.5",
+    "yup": "^0.32.11",
+    "@hookform/resolvers": "^2.8.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

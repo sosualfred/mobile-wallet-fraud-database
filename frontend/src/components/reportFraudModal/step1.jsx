@@ -1,136 +1,197 @@
-import React, { useState } from 'react';
-import { X, Eye, EyeOff } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { step1Schema } from "../../utils/validationSchemas";
 
-const Step1UserInfo = ({ formData, updateFormData, nextStep, prevStep, onClose }) => {
-  const [showPassword, setShowPassword] = useState(false);
+const Step1UserInfo = ({ formData, updateFormData, nextStep, prevStep }) => {
+  const [errors, setErrors] = useState({});
+  const [createAccount, setCreateAccount] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      updateFormData({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+      });
+    }
+  }, [isAuthenticated, user, updateFormData]);
 
   const handleChange = (e) => {
-    updateFormData({ [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setCreateAccount(checked);
+    } else {
+      updateFormData({ [name]: value });
+    }
+  };
+
+  const validateForm = async () => {
+    try {
+      await step1Schema.validate(formData, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (validationErrors) {
+      const newErrors = {};
+      validationErrors.inner.forEach((error) => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+      return false;
+    }
+  };
+
+  const handleNext = async () => {
+    const isValid = await validateForm();
+    if (isValid) {
+      nextStep();
+    }
   };
 
   return (
-    <div className="">
-     
-
-      <div className="p-6">
-        <div className="flex items-center mb-4 pb-2">
-          <div className="flex items-center w-1/2">
-            <div className="w-9 h-9 border border-blue-600 text-blue-600 rounded-full flex items-center justify-center mr-2 text-lg">1</div>
-            <span className="ml-2 text-blue-700 text-lg">Your info</span>
+    <div className="p-6 bg-white rounded-lg shadow">
+      <h2 className="text-xl font-semibold mb-4">Report fraudulent number</h2>
+      <div className="flex items-center mb-6">
+        <div className="flex items-center w-1/2">
+          <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mr-2">
+            1
           </div>
-          <div className="flex items-center w-1/2 pl-5">
-            <div className="w-9 h-9 border border-gray-500 text-gray-600 rounded-full flex items-center justify-center mr-2 text-lg">2</div>
-            <span className="text-gray-600 ml-2 text-lg">Fraud report</span>
-          </div>
+          <span className="text-blue-500 font-medium">Your info</span>
         </div>
-        
-        <p className="text-lg text-gray-600 mb-4">Your details are required to submit a fraud report.</p>
-
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="flex flex-col">
-            <label htmlFor="firstName" className="mb-1 text-gray-700">First name</label>
+        <div className="flex items-center w-1/2">
+          <div className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center mr-2">
+            2
+          </div>
+          <span className="text-gray-500">Fraud report</span>
+        </div>
+      </div>
+      <p className="text-sm text-gray-600 mb-4">
+        Your details are required to submit a fraud report
+      </p>
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              First name
+            </label>
             <input
               type="text"
+              id="firstName"
               name="firstName"
-              value={formData.firstName || ''}
+              value={formData.firstName || ""}
               onChange={handleChange}
-              placeholder="e.g Malik"
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-50"
+              placeholder="e.g Isaac"
+              className="w-full p-2 border border-gray-300 rounded-md"
             />
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="lastName" className="mb-1 text-gray-700">Last name</label>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Last name
+            </label>
             <input
               type="text"
+              id="lastName"
               name="lastName"
-              value={formData.lastName || ''}
+              value={formData.lastName || ""}
               onChange={handleChange}
-              placeholder="e.g Kolade"
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-50"
+              placeholder="e.g Osei"
+              className="w-full p-2 border border-gray-300 rounded-md"
             />
           </div>
         </div>
-
-
-        <div className="mb-4">
-          <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-gray-700">Email address</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email || ''}
-              onChange={handleChange}
-              placeholder="e.g malikkolade@gmail.com"
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"
-            />
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <div className="flex flex-col">
-            <label htmlFor="phoneNumber" className="mb-1 text-gray-700">Phone number</label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber || ''}
-              onChange={handleChange}
-              placeholder="e.g 02345xxxxxx"
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full"
-            />
-          </div>
-        </div>
-
-        <div className="mb-4 flex items-center">
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Email address
+          </label>
           <input
-            type="checkbox"
-            id="createAccount"
-            name="createAccount"
-            checked={formData.createAccount || false}
-            onChange={(e) => updateFormData({ createAccount: e.target.checked })}
-            className="mr-2 w-5 h-5"
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email || ""}
+            onChange={handleChange}
+            placeholder="e.g isaacosei@gmail.com"
+            className="w-full p-2 border border-gray-300 rounded-md"
           />
-          <label htmlFor="createAccount" className="text-lg text-gray-700">Create an account for me</label>
         </div>
-
-        {formData.createAccount && (
-          <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-base  text-gray-700 mb-2">
+        <div>
+          <label
+            htmlFor="phoneNumber"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Phone number
+          </label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={formData.phoneNumber || ""}
+            onChange={handleChange}
+            placeholder="e.g 02345xxxxx"
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        {!isAuthenticated && (
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="createAccount"
+              name="createAccount"
+              checked={createAccount}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="createAccount"
+              className="ml-2 block text-sm text-gray-900"
+            >
+              Create an account for me
+            </label>
+          </div>
+        )}
+        {createAccount && (
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
+              id="password"
               name="password"
-              value={formData.password || ''}
+              value={formData.password || ""}
               onChange={handleChange}
-              placeholder="Password"
-              className="border p-2 rounded-md bg-gray-100 border-gray-300 w-full pr-10"
+              placeholder="Enter your password"
+              className="w-full p-2 border border-gray-300 rounded-md"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-3/4 transform -translate-y-1/2 text-gray-400"
-            >
-              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-            </button>
           </div>
         )}
       </div>
-
-      <div className="flex justify-between p-4 border-t">
-  <button
-    onClick={prevStep}
-    className="text-gray-600 border border-gray-400 px-6 py-3 rounded-md hover:bg-gray-100 transition duration-200"
-  >
-    Previous
-  </button>
-  <button
-    onClick={nextStep}
-    className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition duration-200"
-  >
-    Next
-  </button>
-</div>
-
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={prevStep}
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

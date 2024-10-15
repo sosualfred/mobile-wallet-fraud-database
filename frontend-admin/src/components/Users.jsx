@@ -5,7 +5,7 @@ import OverviewContent from '../pages/adminDashboard/adminOverview';
 import RequestsContent from '../pages/adminDashboard/requestContents';
 import ReportedNumbersContent from '../pages/adminDashboard/reportedNumbers';
 
-import { Archive, ArrowUp, Database, ThumbsDown } from 'lucide-react';
+import { Archive, ArrowUp, Database} from 'lucide-react';
 import GitPull from "../assets/git-pull-request.svg"
 
 const StatCard = ({ icon, value, title }) => (
@@ -26,7 +26,7 @@ const StatCard = ({ icon, value, title }) => (
 );
 
 const UserDashboard = () => {
-  const [activeTab, setActiveTab] = useState('Users'); // Default tab
+  const [activeTab, setActiveTab] = useState('Users'); 
 
   const renderContent = () => {
     switch (activeTab) {

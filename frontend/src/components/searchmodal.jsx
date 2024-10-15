@@ -9,8 +9,8 @@ const SearchModal = () => {
             <Navbar />
 
             <div className='flex items-center gap-5 pl-28 pt-8'>
-                <ArrowLeft className=' text-blue-900' />
-                <h1 className='text-[23px] font-semibold'>Search Results</h1>
+            <a href="/"><ArrowLeft className=' text-blue-900' /></a>
+                <a href="/"><h1 className='text-[23px] font-semibold'>Search Results</h1></a>
             </div>
 
             <div className="flex justify-center items-center min-h-screen pt-20">
@@ -29,17 +29,17 @@ const SearchModal = () => {
                         </div>
                     </div>
                     <h1 className='text-gray-400 text-[18px]'>Comments</h1>
-                    <h2 className='text-[#4881F4] text-[18px]'>Reported by: Malik Kolade</h2>
+                    <h2 className='text-[#4881F4] text-[18px]'>Reported by: Isaac Osei</h2>
                     <p className='text-gray-400'>With less than a month to go before European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agrrements to comply</p>
 
-                    <h2 className='text-[#4881F4] text-[18px]'>Commented by: Malik Kolade</h2>
+                    <h2 className='text-[#4881F4] text-[18px]'>Commented by: Isaac Osei</h2>
                     <p className='text-gray-400'>With less than a month to go before European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agrrements to comply</p>
 
                     <Link className='text-blue-700 text-[17px] underline underline-offset-auto  font-semibold'> 7 more comment </Link>
 
                     <div className='flex justify-between'>
                         <h1 className='font-semibold text-[17px] text-red-700'>Report as incorrect</h1>
-                        <h1 className='font-semibold text-[17px] text-blue-700 '>Flag number</h1>
+                        <a href="/upvote"><h1 className='font-semibold text-[17px] text-blue-700 '>Flag number</h1></a>
                     </div>
 
                 </div>
