@@ -45,7 +45,7 @@ const UserDashboard = () => {
               </div>
 
               <div className="grid grid-cols-5 gap-4 mb-6">
-                <StatCard icon={<Database className="w-7 h-7" />} value={24} title="Reported numbers" />
+                <StatCard icon={<Database className="w-7 h-7" />} value={4} title="Reported numbers" />
                 <StatCard icon={<img src={GitPull} alt="Git Pull" className="w-7 h-7" />} value={0} title="Total API calls" />
                 <StatCard icon={<Archive className="w-7 h-7" />} value={0} title="Removed reports" />
                 
