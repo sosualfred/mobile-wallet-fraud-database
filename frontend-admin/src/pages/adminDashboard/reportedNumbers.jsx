@@ -22,7 +22,7 @@ const ReportedNumbersContent = () => {
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 8;
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
   const handlePageChange = (page) => {
