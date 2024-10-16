@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Home from './pages/home';
 import AccountPage from './pages/accountpage';
+
+import ApiKey from "./pages/apikey"
+
 import SearchModal from './components/searchmodal';
 import SubmitReport from './components/submitreport';
 import UpVote from './components/upvote';
