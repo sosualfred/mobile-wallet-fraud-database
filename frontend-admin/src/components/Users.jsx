@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import Navbar from './navbar';
 import OverviewContent from '../pages/adminDashboard/adminOverview';
 import RequestsContent from '../pages/adminDashboard/requestContents';
 import ReportedNumbersContent from '../pages/adminDashboard/reportedNumbers';
-
-import { Archive, ArrowUp, Database} from 'lucide-react';
-import GitPull from "../assets/git-pull-request.svg"
+import { Archive, ArrowUp, Database, CodeXml } from 'lucide-react';
+import GitPull from "../assets/git-pull-request.svg";
 
 const StatCard = ({ icon, value, title }) => (
   <div className="bg-white p-3 rounded-lg shadow flex items-center justify-between">
@@ -26,7 +24,8 @@ const StatCard = ({ icon, value, title }) => (
 );
 
 const UserDashboard = () => {
-  const [activeTab, setActiveTab] = useState('Users'); 
+  const [activeTab, setActiveTab] = useState('Users');
+  const [subTab, setSubTab] = useState('API Keys'); // Added subTab state for nested tabs 
 
   const renderContent = () => {
     switch (activeTab) {
@@ -37,7 +36,6 @@ const UserDashboard = () => {
       case 'Users':
         return (
           <div>
-          
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Odoh Craig - odohcraig@gmail.com - 09059784163</h2>
@@ -48,19 +46,39 @@ const UserDashboard = () => {
                 <StatCard icon={<Database className="w-7 h-7" />} value={4} title="Reported numbers" />
                 <StatCard icon={<img src={GitPull} alt="Git Pull" className="w-7 h-7" />} value={0} title="Total API calls" />
                 <StatCard icon={<Archive className="w-7 h-7" />} value={0} title="Removed reports" />
-                
               </div>
 
-              {/* Tabs */}
-              <div className="flex border-b mb-4">
-                <button className="px-4 py-2 border-b-2 border-blue-500">API Keys</button>
-                <button className="px-4 py-2">Reported numbers</button>
+              {/* Sub Tabs for API Keys and Reported Numbers  */}
+
+              <div className="flex justify-center items-center border-b mb-4">
+                <button
+                  onClick={() => setSubTab('API Keys')}
+                  className={`flex items-center px-4 py-2 ${subTab === 'API Keys' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
+                >
+                  <CodeXml className="w-5 h-5 mr-1" />
+                  API Keys
+                </button>
+                <button
+                  onClick={() => setSubTab('Reported numbers')}
+                  className={`flex items-center px-4 py-2 ${subTab === 'Reported numbers' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
+                >
+                  <Database className="w-5 h-5 mr-1" />
+                  Reported numbers
+                </button>
               </div>
 
-              {/* Content */}
-              <div className="bg-gray-50 p-80 rounded-lg">
-                <p className="text-center text-gray-600">0 API Keys</p>
-                <p className="text-center text-gray-400">User has not created any API key.</p>
+              {/* Sub Tab Content */}
+              <div className="bg-gray-50 p-8 rounded-lg text-center text-gray-600">
+                {subTab === 'API Keys' ? (
+                  <div>
+                    <p className="text-xl font-semibold">0 API Keys</p>
+                    <p className="mt-2 text-gray-400">User has not created any API key.</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-gray-400">No reported numbers available.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -75,26 +93,28 @@ const UserDashboard = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <Navbar />
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <button className="bg-red-500 text-white px-4 py-2 rounded">
-            New fraudulent number request - View
-          </button>
+
+
+      <div className="flex items-center justify-between mb-6">
+     
+        <div className="flex space-x-4">
+          {['Overview', 'Reported numbers', 'Users', 'Requests'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-2 py-1 ${activeTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-800'}`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
+
+
+        <button className="bg-[#fde8e8] text-red-500 px-4 py-2 rounded">
+          New fraudulent number request - View
+        </button>
       </div>
 
-      <div className="flex space-x-4 mb-6">
-        {['Overview', 'Reported numbers', 'Users', 'Requests'].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-2 py-1 ${activeTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-800'
-              }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
 
       <div>{renderContent()}</div>
     </div>
