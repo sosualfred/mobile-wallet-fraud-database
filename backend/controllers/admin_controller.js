@@ -1,6 +1,33 @@
 
 import { AdminModel } from "../models/admin_model.js";
+
 import bcrypt from "bcryptjs";
+import { adminSchema } from "../schema/admin_schema.js";
+
+export const signUp = async (req, res, next) => {
+    try {
+      const { error, value } = adminSchema.validate(req.body);
+      if (error) {
+        return res.status(400).send(error.details[0].message);
+      }
+  
+      //   Checking if admin is already in database
+      const email = value.email;
+  
+      const findIfAdminExist = await AdminModel.findOne({ email });
+      if (findIfAdminExist) {
+        return res.status(401).send("Admin is already registered");
+      } else {
+        const hashedPassword = bcrypt.hashSync(value.password, 12);
+        value.password = hashedPassword;
+  
+        const addAmin = await AdminModel.create(value);
+        return res.status(201).send("Admin registered successfully");
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
 
 export const login = async(req,res,next)=>{
     try {
