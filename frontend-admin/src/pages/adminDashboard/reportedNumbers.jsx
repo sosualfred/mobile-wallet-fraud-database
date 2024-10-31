@@ -37,11 +37,11 @@ const ReportedNumbersContent = () => {
         <div className='font-semibold text-xl'>100 Reported Cases</div>
 
         <div className='font-medium '>
-          <input type="checkbox" name="checkbox" id="checkbox" className='w-8  border'/> Show reported reports
+          <input type="checkbox" name="checkbox" id="checkbox" className='w-8  border' /> Show reported reports
         </div>
 
         <div className='flex gap-2 '>
-          <SearchInput  />
+          <SearchInput />
 
           <select className='border border-gray-400 w-24 h-10 rounded-md shadow-sm' name="category" id="category">
             <option>All Status</option>
@@ -50,22 +50,22 @@ const ReportedNumbersContent = () => {
           </select>
 
           <div className='relative w-[125px]'>
-      <select className='appearance-none border flex justify-center items-center w-full h-10 border-gray-400 rounded-md shadow-sm pl-10 pr-4' name="time" id="time">
-        <option>All time</option>
-        <option>Today</option>
-        <option>Last 7 days</option>
-        <option>Last Month</option>
-      </select>
-      <div className="pointer-events-none absolute inset-y-0 left-0 bottom-4 flex items-center px-2">
-        <CalendarIcon className='w-6 h-4 text-black' />
-      </div>
+            <select className='appearance-none border flex justify-center items-center w-full h-10 border-gray-400 rounded-md shadow-sm pl-10 pr-4' name="time" id="time">
+              <option>All time</option>
+              <option>Today</option>
+              <option>Last 7 days</option>
+              <option>Last Month</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 left-0 bottom-4 flex items-center px-2">
+              <CalendarIcon className='w-6 h-4 text-black' />
+            </div>
 
-      <div className="pointer-events-none absolute inset-y-0 right-0 bottom-4 flex items-center px-2 text-gray-700">
-                <ChevronDown className='w-5 text-black ' />
-              </div>
-    </div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 bottom-4 flex items-center px-2 text-gray-700">
+              <ChevronDown className='w-5 text-black ' />
+            </div>
+          </div>
 
-         
+
         </div>
       </div>
 
@@ -73,7 +73,7 @@ const ReportedNumbersContent = () => {
         <table className="w-[98%] bg-white border-l-1 border-r-1 border border-gray-300 rounded-lg overflow-hidden">
           <thead className='h-12 flex-1 gap-6 '>
             <tr>
-              <th className="py-2 px-6  bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300"><input type="checkbox" name="checkbox" id="checkbox" className='w-8  border'/>   NAME</th>
+              <th className="py-2 px-6  bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300"><input type="checkbox" name="checkbox" id="checkbox" className='w-8  border' />   NAME</th>
               <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">PHONE NUMBER</th>
               <th className="py-2 px-4 bg-gray-200 text-left  text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">NETWORK</th>
               <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">DATE REPORTED</th>
@@ -84,7 +84,7 @@ const ReportedNumbersContent = () => {
           <tbody>
             {currentData.map((item, index) => (
               <tr key={index} className=''>
-                <td className="py-2 px-6 border-b border-gray-300"><input type="checkbox" name="checkbox" id="checkbox" className='w-8  border'/>    {item.name}</td>
+                <td className="py-2 px-6 border-b border-gray-300"><input type="checkbox" name="checkbox" id="checkbox" className='w-8  border' />    {item.name}</td>
                 <td className="py-2 px-4 border-b border-gray-300">{item.phone}</td>
                 <td className="py-2 px-4 border-b  pl-7 border-gray-300">{item.network}</td>
                 <td className="py-2 px-4 border-b border-gray-300">{item.date}</td>
@@ -94,10 +94,10 @@ const ReportedNumbersContent = () => {
                   </span>
                 </td>
                 <td className="py-2 px-4 border-b border-gray-300 pl-20 text-left">
-  <span className="inline-block">{item.comment}</span>
-  <ExternalLink className='text-blue-600 w-5 inline-block ml-4' />
-  <Trash2 className='text-red-700 w-5 inline-block ml-4' />
-</td>
+                  <span className="inline-block">{item.comment}</span>
+                  <ExternalLink className='text-blue-600 w-5 inline-block ml-4' />
+                  <Trash2 className='text-red-700 w-5 inline-block ml-4' />
+                </td>
 
               </tr>
             ))}

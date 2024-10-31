@@ -95,8 +95,9 @@ const UsersContent = () => {
                 <td className="py-2 px-4 border-b border-gray-300 text-center">{item.report}</td>
                 <td className="py-2 px-4 border-b border-gray-300 text-left">
                   <span className="inline-block">{item.activity}</span>
-               <Link to="/user">   <ExternalLink className='text-blue-600 w-5 inline-block ml-2' /> </Link>
-                  <UserMinusIcon className='text-red-700 w-5 inline-block ml-2' />
+                <ExternalLink className='text-blue-600 w-5 inline-block ml-2' /> 
+                <Link to="/user">  <UserMinusIcon className='text-red-700 w-5 inline-block ml-2' /> </Link>
+
                 </td>
 
               </tr>
