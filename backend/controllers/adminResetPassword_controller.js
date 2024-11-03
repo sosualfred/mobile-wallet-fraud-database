@@ -1,6 +1,7 @@
 import { AdminModel } from "../models/admin_model.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { passwordSchema } from "../schema/user_schema.js";
 
 // Function to generate OTP and hashed OTP
 const generateOTP = () => {
@@ -100,3 +101,50 @@ export const verifyAdminCode = async (req, res, next) => {
     next(error); // Pass the error to the error handling middleware
   }
 };
+
+export const resetAdminPassword = async (req,res,next)=>{
+  const {email,newOtp,password}=req.body;
+
+  const otpHash = newOtp.toString();
+
+  const hashedOtp = crypto.createHash("sha256").update(otpHash).digest("hex");
+
+  try {
+    const admin = await AdminModel.findOne({
+      email,
+      resetToken: hashedOtp,
+      resetTokenExpiresAt: {$gt: Date.now() },
+    });
+
+    if (!admin){
+      return res
+      .status(400)
+      .json('Failed to change password');
+    }
+
+    //validate the new password
+    const {error} = passwordSchema.validate({password});
+    if(error){
+      return res.status(400).json(error.details[0].message);
+    }
+
+    //ensure the new password is different from the past one
+    const isSamePassword = await bcrypt.compare(password,admin.password);
+    if (isSamePassword) {
+      return res.status(400).json('Please ensure your new password meets all requirement')
+    }
+
+    //reseting new password
+    const hashedPassword = bcrypt.hashSync(password,10);
+    admin.password = hashedPassword;
+
+    admin.resetToken = undefined;
+    admin.resetTokenExpiresAt = undefined;
+
+    await admin.save();
+    
+    return res.status(200).json('Password changed successfully');
+  } catch (error) {
+      next(error);
+  }
+}
