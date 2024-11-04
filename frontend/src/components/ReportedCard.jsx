@@ -59,7 +59,7 @@ const ReportedCard = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     setDisplayedReports(allReports.slice(startIndex, endIndex)); 
-    console.data(allReports)
+    console.log(allReports)
   };
 
   const handlePageChange = (page) => {
