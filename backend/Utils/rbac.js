@@ -11,6 +11,7 @@ export const permissions = [
         'canManageAdmins'
       ]
     },
+  
     {
       role: 'user',
       actions: [
@@ -18,4 +19,3 @@ export const permissions = [
       ]
     }
   ];
-  

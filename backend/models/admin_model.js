@@ -1,7 +1,5 @@
-
 import{model,Schema, Types } from 'mongoose';
 import { toJSON } from '@reis/mongoose-to-json';
-
 
 const adminSchema = new Schema(
     {
@@ -33,3 +31,19 @@ const adminSchema = new Schema(
 adminSchema.plugin(toJSON);
 
 export const AdminModel = model('Admin',adminSchema);
+
+
+const updateAdminSchema = new Schema({
+    firstName: { type: String },
+    lastName: { type: String },
+    email: { type: String, unique: true, required: true },
+    phoneNumber: { type: String },
+    password: { type: String, required: true },
+}, {
+    timestamps: true,
+})
+
+updateAdminSchema.plugin(toJSON);
+
+export const UpdateAdminModel = model("UpdateAdmin", updateAdminSchema)
+
