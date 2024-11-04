@@ -3,6 +3,7 @@ import { AdminModel } from "../models/admin_model.js";
 
 import bcrypt from "bcrypt";
 import { adminSchema } from "../schema/admin_schema.js";
+import { permissions } from "../Utils/rbac.js";
 
 export const signUp = async (req, res, next) => {
   try {
@@ -29,16 +30,50 @@ export const signUp = async (req, res, next) => {
   }
 };
 
+export const createAdmin = async (req, res, next) => {
+  try {
+    const { error, value } = adminSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+    const existingAdmin = await AdminModel.findOne({ email: value.email });
+    if (existingAdmin) {
+      return res.status(409).json({ message: "Admin with this email is already registered." });
+    }
+
+    const hashedPassword = bcrypt.hashSync(value.password, 12);
+
+    const defaultPermissions = permissions.find((p) => p.role === (value.role || 'admin'))?.actions || [];
+
+    const newAdminData = {
+      ...value,
+      password: hashedPassword,
+      role: value.role || 'admin',
+      permissions: defaultPermissions,
+    };
+
+    const newAdmin = new AdminModel(newAdminData);
+    await newAdmin.save();
+
+    return res.status(201).json({ message: "New admin added successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body
+    console.log("body-->", req.body)
 
     const admin = await AdminModel.findOne({ email: email });
 
     if (!admin) {
       res.status(401).json('Invalid email or password');
     } else {
-      const correctPassword = bcrypt.compareSync(password, user.password);
+      const correctPassword = bcrypt.compareSync(password, admin.password);
       if (!correctPassword) {
         res.status(401).json('Invalid email or password');
       } else {
