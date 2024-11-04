@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CalendarIcon, ChevronDown, ExternalLink, Trash2 } from 'lucide-react';
-import SearchInput from "../../../../frontend/src/components/searchInput";
+import SearchInput from "../../../../frontend/src/components/searchInput"; // Ensure this path is correct
 import RemovedReportModal from './RemovedReportModal'; 
 
 const ReportedNumbersContent = () => {
@@ -76,7 +76,7 @@ const ReportedNumbersContent = () => {
               <CalendarIcon className='w-6 h-4 text-black' />
             </div>
             <div className="pointer-events-none absolute inset-y-0 right-0 bottom-4 flex items-center px-2 text-gray-700">
-              <ChevronDown className='w-5 text-black' />
+              <ChevronDown className='w-5 text-black ' />
             </div>
           </div>
         </div>
@@ -86,8 +86,10 @@ const ReportedNumbersContent = () => {
         <table className="w-[98%] bg-white border-l-1 border-r-1 border border-gray-300 rounded-lg overflow-hidden">
           <thead className='h-12 flex-1 gap-6'>
             <tr>
-              <th className="py-2 px-6 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300"><input type="checkbox" name="checkbox" id="checkbox" className='w-8 border' /> NAME</th>
-              <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">PHONE NUMBER</th>
+              <th className="py-2 px-6 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">
+                <input type="checkbox" name="checkbox" id="checkbox" className='w-8 border' /> NAME
+              </th>
+              <th className="py-2 px-6 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">PHONE NUMBER</th>
               <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">NETWORK</th>
               <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">DATE REPORTED</th>
               <th className="py-2 px-4 bg-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300">STATUS</th>
@@ -97,41 +99,35 @@ const ReportedNumbersContent = () => {
           <tbody>
             {currentData.map((item, index) => (
               <tr key={index} onClick={() => handleReportClick(item)} className='cursor-pointer'>
-                <td className="py-2 px-6 border-b border-gray-300"><input type="checkbox" name="checkbox" id="checkbox" className='w-8 border' /> {item.name}</td>
+                <td className="py-2 px-6 border-b border-gray-300">
+                  <input type="checkbox" name="checkbox" id="checkbox" className='w-8 border' /> {item.name}
+                </td>
                 <td className="py-2 px-4 border-b border-gray-300">{item.phone}</td>
                 <td className="py-2 px-4 border-b pl-7 border-gray-300">{item.network}</td>
                 <td className="py-2 px-4 border-b border-gray-300">{item.date}</td>
-                <td className="py-0 px-0 border-b pl-3 border-gray-300">
-                  <span className={`inline-block px-2 py-1 text-xs font-medium w-16 text-center rounded-lg ${item.status === 'Pending' ? 'text-black bg-[#FDF7B2]' : item.status === 'Removed' ? 'text-red-800 bg-red-100' : 'text-green-800 bg-green-100'}`}>
-                    {item.status}
-                  </span>
+                <td className="py-0 px-2 border-b border-gray-300">
+                  <span className={`text-xs px-2 py-1 rounded-full ${item.status === 'Removed' ? 'bg-red-200 text-red-800' : item.status === 'Pending' ? 'bg-yellow-200 text-yellow-800' : ''}`}>{item.status}</span>
                 </td>
-                <td className="py-2 px-4 border-b border-gray-300 pl-20 text-left">
-                  <span className="inline-block">{item.comment}</span>
-                  <ExternalLink className='text-blue-600 w-5 inline-block ml-4' />
-                  <Trash2 className='text-red-700 w-5 inline-block ml-4' />
-                </td>
+                <td className="py-2 px-2 border-b border-gray-300">{item.comment}</td>
               </tr>
             ))}
-            <tr>
-              <td colSpan="6" className="py-2 px-4 pt-4 text-center flex justify-center items-center">
-                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className="px-4 py-2 mx-1 bg-gray-200 rounded-md">&lt;</button>
-                {[...Array(totalPages)].map((_, index) => (
-                  <button key={index} onClick={() => handlePageChange(index + 1)} className={`px-4 py-2 mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>{index + 1}</button>
-                ))}
-                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className="px-4 py-2 mx-1 bg-gray-200 rounded-md">&gt;</button>
-              </td>
-            </tr>
           </tbody>
         </table>
+
+        <div className='flex justify-between items-center pt-3'>
+          <div className="flex justify-center items-center">
+            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className='bg-gray-200 px-4 py-2 rounded-md mr-2'>Previous</button>
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className='bg-gray-200 px-4 py-2 rounded-md'>Next</button>
+          </div>
+          <div className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </div>
+        </div>
       </div>
 
-      {/* Modal for showing report details  */}
-      {selectedReport && (
-        <RemovedReportModal report={selectedReport} onClose={handleCloseModal} />
-      )}
+      {selectedReport && <RemovedReportModal report={selectedReport} onClose={handleCloseModal} />}
     </div>
-  )
+  );
 };
 
 export default ReportedNumbersContent;

@@ -1,20 +1,39 @@
-import { model, Schema } from 'mongoose';
+import{model,Schema, Types } from 'mongoose';
 import { toJSON } from '@reis/mongoose-to-json';
 
-const adminSchema = new Schema({
-    email: { type: String, lowercase: true, unique: true },
-    password: { type: String }
-},
+const adminSchema = new Schema(
     {
-        timestamps: true,
-    });
+      firstName: { type: String },
+      lastName: { type: String },
+      email: { type: String, lowercase: true, unique: true },
+      phoneNumber: { type: String, unique: true },
+      password: { type: String },
+      resetToken: { type: String },
+      resetTokenExpiresAt: { type: Date },
+      fraudReport: [{ type: Types.ObjectId, ref: "FraudReport" }],
+      apiKey: [{ type: Types.ObjectId, ref: "ApiKey" }],
+      role: { type: String, default: 'user', enum: ['user', 'admin'] },
+    },
+    {
+      timestamps: true,
+    }
+  );
+
+
+// const adminSchema = new Schema({
+//     email:{type: String, lowercase: true, unique:true},
+//     password:{type: String}
+// },
+// {
+//     timestamps: true,
+// });
 
 adminSchema.plugin(toJSON);
 
-export const AdminModel = model('Admin', adminSchema);
+export const AdminModel = model('Admin',adminSchema);
 
 
-const updateAdminScheme = new Schema({
+const updateAdminSchema = new Schema({
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String, unique: true, required: true },
@@ -24,7 +43,7 @@ const updateAdminScheme = new Schema({
     timestamps: true,
 })
 
+updateAdminSchema.plugin(toJSON);
 
-updateAdminScheme.plugin(toJSON);
+export const UpdateAdminModel = model("UpdateAdmin", updateAdminSchema)
 
-export const UpdateAdminModel = model("UpdateAdmin", updateAdminScheme)
