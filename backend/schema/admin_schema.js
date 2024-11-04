@@ -20,6 +20,10 @@ export const adminSchema = Joi.object({
         'Passwsord must be at least 8 characters long and include at least one number'
     )
     .required(),
+
+    role: Joi.string()
+    .valid('user', 'admin')
+    .default('user')
 });
 
 

@@ -14,6 +14,7 @@ const adminSchema = new Schema(
       resetTokenExpiresAt: { type: Date },
       fraudReport: [{ type: Types.ObjectId, ref: "FraudReport" }],
       apiKey: [{ type: Types.ObjectId, ref: "ApiKey" }],
+      role: { type: String, default: 'user', enum: ['user', 'admin'] },
     },
     {
       timestamps: true,
