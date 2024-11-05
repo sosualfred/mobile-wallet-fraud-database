@@ -1,5 +1,5 @@
 import { AdminModel, UpdateAdminModel } from "../models/admin_model.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { permissions } from "../Utils/rbac.js";
 import {adminSchema, updateAdminSchema} from "../schema/admin_schema.js";
 import jwt from "jsonwebtoken";
