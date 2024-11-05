@@ -10,7 +10,7 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
     console.log("body-->", req.body);
 
-    // Find the admin by email
+    // Find the admin by their email
     const admin = await AdminModel.findOne({ email: email });
     if (!admin) {
       return res.status(401).json('Invalid email or password');
