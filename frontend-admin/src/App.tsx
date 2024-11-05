@@ -6,6 +6,7 @@ import AdminRecoverPassword from "./components/AdminRecoverPassword";
 import AdminNav from './components/adminNav'
 import UserDetails from "./pages/userdetails"
 import Users from "./components/Users"
+import MyAccount from "./pages/adminDashboard/MyAccount"
 
 
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/reported" element={<AdminNav />} />
         <Route path="/users" element={<UserDetails />} />
         <Route path="/user" element={<Users/>} />
+        <Route path='/my-account' element={<MyAccount />} />
       </Routes>
     </Router>
   );
