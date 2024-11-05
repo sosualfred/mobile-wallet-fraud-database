@@ -8,9 +8,11 @@ export const permissions = [
         'canSetDomainRestrictions',
         'canDeactivateUserAccount',
         'canSetSystemConfig',
-        'canManageAdmins'
+        'canManageAdmins',
+        'canGetAdmins'
       ]
     },
+  
     {
       role: 'user',
       actions: [
@@ -18,4 +20,3 @@ export const permissions = [
       ]
     }
   ];
-  
