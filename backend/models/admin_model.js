@@ -3,6 +3,7 @@ import{model,Schema, Types } from 'mongoose';
 import { toJSON } from '@reis/mongoose-to-json';
 
 
+
 const adminSchema = new Schema(
     {
       firstName: { type: String },
@@ -29,6 +30,14 @@ const adminSchema = new Schema(
 // {
 //     timestamps: true,
 // });
+
+const AdminSchema = new Schema({
+    isActive:{
+      type: Boolean,
+      default: true
+    }
+});
+
 
 adminSchema.plugin(toJSON);
 

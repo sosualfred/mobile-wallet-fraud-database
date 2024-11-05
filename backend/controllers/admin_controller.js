@@ -111,3 +111,37 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: "Logout failed. Please try again." });
   }
 };
+
+export const deactivateAdmin = async(req,res,next)=>{
+    try {
+      const{adminId} = req.params;
+      // find and updated the admin status
+
+      const admin = await AdminModel.findById(adminId);
+      if(!admin){
+        return res.status(404).json('failed to deactivate admin account. Please try again');
+      }
+
+      admin.isActive = false;
+      await admin.save();
+      res.status(200).json('Admin account activated successfully');
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const deleteAdmin = async (req,res,next)=>{
+  try {
+    const {adminId} = req.params;
+    //find and delete the admin
+    const admin = await AdminModel.findByIdAndDelete(adminId);
+    if(!deleteAdmin){
+      return res.status(404).json('Failed to delete the admin account. Please ensure admin ID is correct and try again')
+    }
+    
+    return res.status(200).json('Admin account deleted successfully');
+  } catch (error) {
+      next(error);
+    
+  }
+}
