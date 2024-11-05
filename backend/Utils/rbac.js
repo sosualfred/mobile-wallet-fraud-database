@@ -8,7 +8,8 @@ export const permissions = [
         'canSetDomainRestrictions',
         'canDeactivateUserAccount',
         'canSetSystemConfig',
-        'canManageAdmins'
+        'canManageAdmins',
+        'canGetAdmins'
       ]
     },
   

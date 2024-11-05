@@ -13,6 +13,7 @@ const adminSchema = new Schema(
       fraudReport: [{ type: Types.ObjectId, ref: "FraudReport" }],
       apiKey: [{ type: Types.ObjectId, ref: "ApiKey" }],
       role: { type: String, default: 'user', enum: ['user', 'admin'] },
+      isActive: {type: Boolean, default: true}
     },
     {
       timestamps: true,
