@@ -25,8 +25,9 @@ import { permissions } from "../Utils/rbac.js";
 //   }
 // };
 
+
 export const isAuthenticated = (req, res, next) => {
-  console.log("sessio", req.session)
+  console.log("session", req.session)
   req.user = req.session.user || req.session.admin
   // Check if session contains user
   if (req.user) {
@@ -75,6 +76,29 @@ export const validateDomain = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+// export const hasPermission =  (action) =>{
+//   return async (req, res, next)=>{
+//     try {
+//       const admin = await AdminModel.findById(req.auth.id);
+//       const permission = permissions.find(value => value.role === admin);
+//       if(!permission){
+//         return res.status(403).json("No permission found!")
+//       }
+
+//       if (permission.actions.includes(action)){
+//         next();
+//       } else{
+//         res.status(403).json("Action not allowed!")
+//       }
+
+//     } catch (error) {
+//       next(error)
+//     }
+//   }
+// };
 
 
 export const hasPermission = (action) => {
@@ -126,5 +150,4 @@ export const hasPermission = (action) => {
 //     }
 //   };
 // };
-
 
