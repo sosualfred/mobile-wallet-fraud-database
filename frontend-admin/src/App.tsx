@@ -6,6 +6,7 @@ import AdminRecoverPassword from "./components/AdminRecoverPassword";
 import AdminNav from './components/adminNav'
 import UserDetails from "./pages/userdetails"
 import Users from "./components/Users"
+import MyAccount from "./pages/adminDashboard/MyAccount"
 import AdminList from "../../frontend-admin/src/pages/adminDashboard/AdminList"
 import NewAdminModal from "../src/pages/adminDashboard/NewAdminModal"
 
@@ -21,9 +22,12 @@ function App() {
         <Route path="/admin-recover-password" element={<AdminRecoverPassword />} />
         <Route path="/reported" element={<AdminNav />} />
         <Route path="/users" element={<UserDetails />} />
+        <Route path="/user" element={<Users/>} />
+        <Route path='/my-account' element={<MyAccount />} />
         <Route path="/user" element={<Users />} />
         <Route path='/admin-list' element={<AdminList />} />
         <Route path='/new-admin-modal' element={<NewAdminModal />} />
+
 
 
 
