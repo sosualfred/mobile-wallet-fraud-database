@@ -200,6 +200,8 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: "Logout failed. Please try again." });
   }
 
+};
+
 export const deactivateAdmin = async(req,res,next)=>{
     try {
       const{adminId} = req.params;

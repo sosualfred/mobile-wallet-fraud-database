@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { createAdmin, deactivateAdmin, deleteAdmin, logout } from "../controllers/admin_controller.js";
-import { createAdmin, logout, updateAdmin } from "../controllers/admin_controller.js";
+import { createAdmin, deactivateAdmin, deleteAdmin, logout, updateAdmin } from "../controllers/admin_controller.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import { login, signUp, listAdminUsers } from '../controllers/admin_controller.js';
 import { hasPermission } from "../middlewares/auth.js";
