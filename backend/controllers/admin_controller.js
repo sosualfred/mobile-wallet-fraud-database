@@ -115,16 +115,17 @@ export const logout = async (req, res) => {
 export const deactivateAdmin = async(req,res,next)=>{
     try {
       const{adminId} = req.params;
+
       // find and updated the admin status
 
       const admin = await AdminModel.findById(adminId);
-      if(!admin){
+      if(!deactivateAdmin){
         return res.status(404).json('failed to deactivate admin account. Please try again');
       }
 
-      admin.isActive = false;
-      await admin.save();
-      res.status(200).json('Admin account activated successfully');
+      //admin.isActive = false;
+      //await admin.save();
+      res.status(200).json('Admin account deactivated successfully');
     } catch (error) {
         next(error);
     }

@@ -19,7 +19,6 @@ adminRouter.post("/api/admin/register", signUp);
 adminRouter.post("/api/admin/deactivate", deactivateAdmin);
 
 adminRouter.delete("/api/admin/delete", deleteAdmin)
-
 // adminRouter.post('api/admin/login', isAuthenticated, login);
 
 
