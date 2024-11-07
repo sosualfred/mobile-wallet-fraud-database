@@ -5,6 +5,7 @@ import {
   logout,
   refreshToken,
   getUserProfile,
+  deactivateUserAccount,
 } from "../controllers/user_controller.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
@@ -19,3 +20,5 @@ userRouter.post("/api/auth/logout", isAuthenticated, logout);
 userRouter.post("/refresh-token", isAuthenticated, refreshToken);
 
 userRouter.get("/api/auth/me", isAuthenticated, getUserProfile);
+
+userRouter.post("/api/users/deactivate", isAuthenticated, deactivateUserAccount);
