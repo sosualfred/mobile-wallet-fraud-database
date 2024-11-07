@@ -45,6 +45,7 @@ export const addFraudReport = async (req, res, next) => {
     user.fraudReport.push(newReport._id);
     await user.save();
 
+    
     // Send the response
     res.status(201).json({
       message: "Your fraud report has been successfully submitted.",
