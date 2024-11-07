@@ -69,7 +69,7 @@ const MAX_REPORTS = 5; // Maximum allowed reports within the time window
 const TIME_WINDOW = 60 * 60 * 1000; // Time window in milliseconds (1 hour)
 
 
-// Helper function to validate phone number format
+// Helper function to validate the phone number format
 const validatePhoneNumber = (phoneNumber) => {
     if (!phoneNumber) {
         return null; // Return null if phoneNumber is undefined or empty
