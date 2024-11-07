@@ -32,6 +32,7 @@ export const fraudReportSchema = Joi.object({
     }),
   fraudImage: Joi.string().allow(null, ""),
   fraudEvidence: Joi.string().allow(null, ""),
+  user: Joi.string().optional().pattern(/^[0-9a-fA-F]{24}$/).message("Invalid user ID format")
 });
 
 export const checkNumberSchema = Joi.object({

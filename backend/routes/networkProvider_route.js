@@ -4,7 +4,7 @@ import { checkLimitEndpoint, getNetworkProvider } from "../controllers/networkPr
 const networkProviderRouter = Router();
 
 networkProviderRouter.get('/api/utils/network-provider', getNetworkProvider);
-networkProviderRouter.get('/api/reports/check-limit', checkLimitEndpoint);
+networkProviderRouter.get('/api/reports/check-limit', checkLimitEndpoint );
 
 
 
