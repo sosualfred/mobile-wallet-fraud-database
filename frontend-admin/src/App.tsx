@@ -9,6 +9,8 @@ import Users from "./components/Users"
 import MyAccount from "./pages/adminDashboard/MyAccount"
 import AdminList from "../../frontend-admin/src/pages/adminDashboard/AdminList"
 import NewAdminModal from "../src/pages/adminDashboard/NewAdminModal"
+import ConfigPage from './pages/adminDashboard/ConfigPage'
+
 
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
         <Route path="/user" element={<Users />} />
         <Route path='/admin-list' element={<AdminList />} />
         <Route path='/new-admin-modal' element={<NewAdminModal />} />
+        <Route path='/config' element={<ConfigPage />} />
 
 
 
