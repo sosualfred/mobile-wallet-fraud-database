@@ -12,8 +12,9 @@ import {
   addNewReport,
 } from "../controllers/fraudReport_controller.js";
 
-import { isAuthenticated } from "../middlewares/auth.js";
+import { hasPermission, isAuthenticated } from "../middlewares/auth.js";
 import { fraudReportUpload } from "../middlewares/upload.js";
+
 
 export const fraudReportRouter = Router();
 
@@ -24,7 +25,7 @@ fraudReportRouter.post(
     { name: "fraudImage", maxCount: 1 },
     { name: "fraudEvidence", maxCount: 1 },
   ]),
-  addFraudReport
+  addFraudReport,
 );
 
 // fraudReportRouter.post("/api/fraud/report", isAuthenticated, addFraudReport);

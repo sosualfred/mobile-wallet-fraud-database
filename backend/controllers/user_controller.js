@@ -168,6 +168,7 @@ export const getUserProfile = async (req, res, next) => {
 
 
 
+
    export const verifyEmail =  async (req, res, next) => {
 
     try {
@@ -211,4 +212,27 @@ export const getUserProfile = async (req, res, next) => {
 }
 };
   
-        
+export const deactivateUserAccount = async (req, res, next) => {
+  try {
+    // Find the user by their ID from the authentication token
+    const user = await UserModel.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    // Check if the account is already deactivated
+    if (!user.isActive) {
+      return res.status(400).json({ message: "Account is already deactivated" });
+    }
+
+    // Deactivate the account
+    user.isActive = false;
+    await user.save();
+
+    res.status(200).json({ message: "Account successfully deactivated" });
+  } catch (error) {
+    next(error);
+  }
+};
+

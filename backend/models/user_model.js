@@ -12,6 +12,7 @@ const userSchema = new Schema(
     resetTokenExpiresAt: { type: Date },
     fraudReport: [{ type: Types.ObjectId, ref: "FraudReport" }],
     apiKey: [{ type: Types.ObjectId, ref: "ApiKey" }],
+    isActive: { type: Boolean, default: true }, // Field to indicate account status
   },
   {
     timestamps: true,
@@ -20,4 +21,4 @@ const userSchema = new Schema(
 
 userSchema.plugin(toJSON);
 
-export const UserModel = model("User", userSchema);
+export const UserModel = model("user", userSchema);
