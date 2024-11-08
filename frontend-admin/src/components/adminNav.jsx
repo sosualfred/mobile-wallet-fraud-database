@@ -59,8 +59,8 @@ const AdminNav = () => {
           </div>
           <div className="flex items-center space-x-4">
             {/* Rendering the notification badge */}
-            <span className="bg-red-100 px-2 py-2 rounded text-red-500 text-sm">
-              New fraudulent number request - <a href="#" className="text-red-500 hover:underline font-bold">View</a>
+            <span className="bg-[#FDF6B2] px-2 py-2 rounded text-gray-600 text-sm">
+              New fraudulent number request - <a href="#" className="text-gray-600 hover:underline font-bold">View</a>
             </span>
             <div className="relative ">
               {/* Rendering the time filter dropdown */}
