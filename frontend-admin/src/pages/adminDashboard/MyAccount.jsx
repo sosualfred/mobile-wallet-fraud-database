@@ -1,11 +1,11 @@
-// MyAccount.js
+
 import React from 'react';
 import Navbar from '../../components/navbar';
 import { useState } from 'react'
 import { DatabaseIcon, HomeIcon, ClipboardListIcon, ChevronDown, CalendarIcon } from 'lucide-react';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react'; // Import the ArrowLeft icon
+import { ArrowLeft } from 'lucide-react';  
 
 // Importing the content components for the different tabs
 import UsersContent from '../adminDashboard/usersContent';
