@@ -9,7 +9,8 @@ import Users from "./components/Users"
 import MyAccount from "./pages/adminDashboard/MyAccount"
 import AdminList from "../../frontend-admin/src/pages/adminDashboard/AdminList"
 import NewAdminModal from "../src/pages/adminDashboard/NewAdminModal"
-import ConfigPage from './pages/adminDashboard/ConfigPage'
+import ConfigPage from './pages/adminDashboard/ConfigPage' 
+
 
 
 
@@ -18,13 +19,14 @@ function App() {
     <Router>
       <Routes>
 
+       
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-reset-password" element={<AdminResetPassword />} />
         <Route path="/admin-recover-password" element={<AdminRecoverPassword />} />
         <Route path="/reported" element={<AdminNav />} />
         <Route path="/users" element={<UserDetails />} />
-        <Route path="/user" element={<Users/>} />
+        <Route path="/user" element={<Users />} />
         <Route path='/my-account' element={<MyAccount />} />
         <Route path="/user" element={<Users />} />
         <Route path='/admin-list' element={<AdminList />} />
