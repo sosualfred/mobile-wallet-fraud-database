@@ -15,7 +15,7 @@ import Signup from './pages/auth/signup';
 import RecoverPassword from './pages/auth/recoverPassword';
 import Verification from './pages/auth/verification';
 import SetNewPassword from './pages/auth/newPassword';
-
+import ReportedNumber from './pages/reported/ReportedNumber'
 function App() {
   return (
     <Router>
@@ -31,6 +31,7 @@ function App() {
           <Route path="/forgot-password" element={<RecoverPassword />} />
           <Route path="/verification" element={<Verification />} />
           <Route path="/new-password" element={<SetNewPassword />} />
+          <Route path="/reported-number" element={<ReportedNumber/>}/>
         </Routes>
       </AuthProvider>
     </Router>

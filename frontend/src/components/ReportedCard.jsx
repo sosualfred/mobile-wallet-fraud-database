@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Calendar, ExternalLink, Trash2 } from "lucide-react";
 import SearchInput from "./SearchInput";
 import { getUserFraudReports } from "../services/api";
-
+import { Link } from "react-router-dom";
 const ReportedCard = () => {
   const [allReports, setAllReports] = useState([]);
   const [displayedReports, setDisplayedReports] = useState([]);
@@ -175,10 +175,10 @@ const ReportedCard = () => {
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex space-x-2">
-                    <ExternalLink
+                  <Link to="/reported-number">  <ExternalLink
                       className="text-blue-500 cursor-pointer"
                       size={16}
-                    />
+                    /> </Link>
                     <Trash2 className="text-red-500 cursor-pointer" size={16} />
                   </div>
                 </td>
