@@ -10,6 +10,7 @@ import {
   getPublicFraudReports,
   searchFraudReport,
   addNewReport,
+  voteOnReport
 } from "../controllers/fraudReport_controller.js";
 
 import { hasPermission, isAuthenticated } from "../middlewares/auth.js";
@@ -62,3 +63,6 @@ fraudReportRouter.get("/api/public/fraud/reports", getPublicFraudReports);
 fraudReportRouter.get("/api/fraud/search/:phoneNumber", searchFraudReport);
 
 fraudReportRouter.post("/api/fraud/report", addNewReport);
+
+
+

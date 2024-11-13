@@ -8,6 +8,8 @@ import {
 
   verifyEmail,
   deactivateUserAccount,
+  votes,
+
 
 } from "../controllers/user_controller.js";
 import { isAuthenticated } from "../middlewares/auth.js";
@@ -28,4 +30,9 @@ userRouter.get("/api/auth/me", isAuthenticated, getUserProfile);
 userRouter.post("/api/auth/verify-email", verifyEmail);
 
 userRouter.post("/api/users/deactivate", isAuthenticated, deactivateUserAccount);
+
+userRouter.post("/api/votes",isAuthenticated, votes);
+
+
+
 

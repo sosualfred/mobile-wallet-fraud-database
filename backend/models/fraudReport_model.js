@@ -25,6 +25,8 @@ const fraudReportSchema = new Schema(
     fraudImage: { type: String },
     fraudEvidence: { type: String },
     user: { type: Types.ObjectId, ref: "user" },
+    reporters:[{ type: Types.ObjectId, ref: "user" }],
+    
   },
   {
     timestamps: true,

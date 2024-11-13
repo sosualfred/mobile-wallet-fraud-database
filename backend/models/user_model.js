@@ -13,6 +13,7 @@ const userSchema = new Schema(
     fraudReport: [{ type: Types.ObjectId, ref: "FraudReport" }],
     apiKey: [{ type: Types.ObjectId, ref: "ApiKey" }],
     isActive: { type: Boolean, default: true }, // Field to indicate account status
+    votes: { type: Number, default: 0}
   },
   {
     timestamps: true,

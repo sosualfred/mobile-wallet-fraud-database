@@ -1,5 +1,5 @@
 import { UserModel } from "../models/user_model.js";
-import { userSchema } from "../schema/user_schema.js";
+import { userSchema, votesSchema } from "../schema/user_schema.js";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { mailTransporter } from "../Utils/mail.js";
@@ -235,4 +235,38 @@ export const deactivateUserAccount = async (req, res, next) => {
     next(error);
   }
 };
+
+//Allow users to vote on specific fraud report.
+export const votes = async (req,res,next)=>{
+  
+  try {
+    const {error, value} = votesSchema.validate(req.body);
+    if(error){
+      return res.status(400).json(error);
+    }
+
+    const {reportId,voteValue} = value;
+
+    const existingVote = await UserModel.findOne({ votes:value.votes});
+    console.log("value-0->",value);
+    
+    //find if user has already voted
+    if(existingVote) {
+      return res.status(400).json('User has already voted');
+    }
+
+    const vote = new votes({ reportId, voteValue });
+    await votes.save(vote);
+
+   // increase the vote count
+    const increment = voteValue === 'upvote' ? 1 : -1;
+      await fraudReport.findByIdAndUpdate(reportId, { $inc: { votes: increment } });
+
+    res.status(200).json("voted successfully")
+  } catch (error) {
+    next(error);
+    
+  }
+};
+
 
