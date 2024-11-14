@@ -1,6 +1,8 @@
 import { UserModel } from "../models/user_model.js";
 import { userSchema } from "../schema/user_schema.js";
 import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import axios from "axios";
 import jwt from "jsonwebtoken"
 import { mailTransporter } from "../Utils/mail.js";
 
@@ -166,6 +168,63 @@ export const getUserProfile = async (req, res, next) => {
 
 
 
+// Access environment variables directly via process.env
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, REDIRECT_URI, REDIRECT_URIS, JWT_SECRET } = process.env;
+
+// Initiates Google OAuth by redirecting the user to Google's OAuth page
+export const initiateGoogleOAuth = (req, res) => {
+  const oauthURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=email%20profile&state=secure_random_state_string`;
+  res.redirect(oauthURL);
+};
+
+// Handles Google OAuth callback, verifies token, and creates/updates user
+export const handleGoogleCallback = async (req, res) => {
+  const { code, state } = req.body;
+
+  // Verify state parameter for CSRF protection
+  if (state !== 'secure_random_state_string') {
+    return res.status(400).json({ message: "Invalid state parameter" });
+  }
+
+  try {
+    // Exchange authorization code for tokens
+    const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+      code,
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      redirect_uri: REDIRECT_URI,
+      redirect_uris: REDIRECT_URIS,
+      grant_type: 'authorization_code'
+    });
+
+    const { access_token, id_token } = tokenResponse.data;
+
+    // Use access token to get user info from Google
+    const userInfoResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+
+    const { email, name } = userInfoResponse.data;
+
+    // Generate JWT token for user session
+    const token = jwt.sign({ email, name }, JWT_SECRET, { expiresIn: '1h' });
+
+    // Mock user creation or update (replace with DB logic)
+    const user = { email, name };
+
+    res.status(200).json({
+      message: "Admin details updated successfully.",
+      user,
+      token
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Google authentication failed", error: error.message });
+  }
+};
+
+
+
+
 
 
 
@@ -211,7 +270,7 @@ export const getUserProfile = async (req, res, next) => {
   res.status(500).json({ message: 'Server error.' });
 }
 };
-  
+
 export const deactivateUserAccount = async (req, res, next) => {
   try {
     // Find the user by their ID from the authentication token

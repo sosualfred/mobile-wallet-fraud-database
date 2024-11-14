@@ -5,16 +5,19 @@ import {
   logout,
   refreshToken,
   getUserProfile,
-
-  verifyEmail,
+  initiateGoogleOAuth,
+  handleGoogleCallback,
   deactivateUserAccount,
-
 } from "../controllers/user_controller.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
 export const userRouter = Router();
 
 userRouter.post("/api/auth/register", signUp);
+
+userRouter.post("/api/auth/google", initiateGoogleOAuth)
+
+userRouter.get("/api/auth/google/callback", handleGoogleCallback)
 
 userRouter.post("/api/auth/login", token);
 
