@@ -27,4 +27,8 @@ userRouter.post("/refresh-token", isAuthenticated, refreshToken);
 
 userRouter.get("/api/auth/me", isAuthenticated, getUserProfile);
 
+
+userRouter.post("/api/auth/verify-email", verifyEmail);
+
 userRouter.post("/api/users/deactivate", isAuthenticated, deactivateUserAccount);
+

@@ -3,7 +3,7 @@ import Button from "../components/button"
 
 const ApiKey = () => {
     return (
-
+       
         <div className="flex items-center justify-center min-h-screen bg-gray-100 shadow-md border border-gray-500 rounded">
             <div className="bg-white p-8 rounded-lg shadow-md w-[600px] ">
                 <div className="flex justify-between items-center mb-4">

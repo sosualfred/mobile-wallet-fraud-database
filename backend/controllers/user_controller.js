@@ -3,10 +3,15 @@ import { userSchema } from "../schema/user_schema.js";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import axios from "axios";
+import jwt from "jsonwebtoken"
+import { mailTransporter } from "../Utils/mail.js";
 
 export const signUp = async (req, res, next) => {
   try {
     const { error, value } = userSchema.validate(req.body);
+   
+    
+
     if (error) {
       return res.status(400).send(error.details[0].message);
     }
@@ -20,14 +25,24 @@ export const signUp = async (req, res, next) => {
     } else {
       const hashedPassword = bcrypt.hashSync(value.password, 12);
       value.password = hashedPassword;
-
       const addUser = await UserModel.create(value);
+    
+      
+
+      //send verification email
+      await mailTransporter.sendMail({
+        to:value.email,
+        subject: "Email verified successfully",
+        text: `Hello verify your email by clicking on http://localhost:3500/api/auth/verify-email`,
+      })
+      
       return res.status(201).send("User registered successfully");
     }
   } catch (error) {
     next(error);
   }
 };
+
 
 //code for login and token
 export const login = async (req, res, next) => {
@@ -127,7 +142,7 @@ export const refreshToken = async (req, res) => {
     const newAccessToken = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" } // or whatever expiration time you prefer
+      { expiresIn: "1h" } 
     );
 
     res.json({
@@ -151,7 +166,6 @@ export const getUserProfile = async (req, res, next) => {
   }
 };
 
-<
 
 
 // Access environment variables directly via process.env
@@ -206,6 +220,55 @@ export const handleGoogleCallback = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Google authentication failed", error: error.message });
   }
+};
+
+
+
+
+
+
+
+   export const verifyEmail =  async (req, res, next) => {
+
+    try {
+  // Get the token from the query parameter
+  const  token  = req.query.token;
+
+  if (!token) {
+      return res.status(400).json({ message: 'Verification token is missing.' });
+  }
+
+  // Verify the token
+  const decoded = jwt.verify(token, 'your_secret_key'); 
+
+  //Find the user associated with the token
+  const user = await User.findOne({ where: { id: decoded.userId } });
+
+  if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+  }
+
+  // Check if the user is already verified
+  if (user.verified) {
+      return res.status(400).json({ message: 'Account already verified.' });
+  }
+
+  // Update the user's verification status
+  user.verified = true;
+  await user.save();
+
+  // Send a success response
+  res.status(200).json({ message: 'Email verified successfully!' });
+
+} catch (error) {
+  next(error)
+  // Handle errors
+  if (error.name === 'TokenExpiredError') {
+      return res.status(400).json({ message: 'Verification token expired.' });
+      
+  }
+  res.status(500).json({ message: 'Server error.' });
+}
 };
 
 export const deactivateUserAccount = async (req, res, next) => {

@@ -107,6 +107,53 @@ export const verifyCode = async (req, res, next) => {
   }
 };
 
+const validateNewPassword = (password) => {
+  const hasNumber = /\d/;  // Regular expression to check if there's at least one digit in the password
+  return password.length >= 8 && hasNumber.test(password);
+};
+
+
+export const changePassword = async (req, res, next) => {
+  try {
+      const { currentPassword, newPassword } = req.body;
+
+      // Check if new password meets requirements
+      if (!validateNewPassword(newPassword)) {
+          return res.status(400).json({ error: "New password does not meet requirements" });
+      }
+
+      // Fetch user from the database
+      const user = await UserModel.findById(req.user.id);
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      // Compare current password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+          return res.status(400).json({ error: "Current password is incorrect" });
+      }
+
+      // Check if the new password is different from the current password
+      const isSamePassword = await bcrypt.compare(newPassword, user.password);
+      if (isSamePassword) {
+          return res.status(400).json({ error: "New password cannot be the same as the current password" });
+      }
+
+      // Hash and update the new password
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+      await user.save();
+
+      res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+      next(error);
+  }
+};
+
+
+
+
 export const resetPassword = async (req, res, next) => {
   const { email, newOtp, password } = req.body;
 

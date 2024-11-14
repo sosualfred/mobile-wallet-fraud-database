@@ -48,7 +48,7 @@ const Navbar = () => {
               </li>
               <li>
                 <button className="text-gray-700 hover:text-blue-500 w-full text-left">
-                  Configurations
+                 <Link to='/config'>Configurations</Link>
                 </button>
               </li>
               <li>

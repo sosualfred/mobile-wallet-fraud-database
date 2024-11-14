@@ -121,7 +121,7 @@ const Home = () => {
             <button
               className={`flex items-center text-gray-500 mb-4 ${
                 activeTab === "api"
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-2"
                   : ""
               }`}
               onClick={() => setActiveTab("api")}
@@ -132,7 +132,7 @@ const Home = () => {
             <button
               className={`flex items-center text-gray-500 mb-4 ${
                 activeTab === "reported"
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-2"
                   : ""
               }`}
               onClick={() => setActiveTab("reported")}
@@ -143,7 +143,7 @@ const Home = () => {
             <button
               className={`flex items-center text-gray-500 mb-4 ${
                 activeTab === "documentation"
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-2"
                   : ""
               }`}
               onClick={() => setActiveTab("documentation")}
