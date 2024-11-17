@@ -1,16 +1,13 @@
 import axios from "axios";
 
-
-
 const baseURL = import.meta.env.VITE_BASE_URL;
-
 
 if (!baseURL) {
   console.error("API_URL is not defined in the environment variables");
 }
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -68,7 +65,7 @@ export const getUserFraudReports = async (params = {}) => {
 export const getPublicFraudReports = async (params = {}) => {
   try {
     const response = await api.get("/public/fraud/reports", { params });
-    return response.data; // Make sure we're returning the data property of the response
+    return response.data;
   } catch (error) {
     console.error("API Error:", error);
     throw error.response?.data || error.message;
@@ -94,6 +91,59 @@ export const submitNewReport = async (phoneNumber, reportText) => {
       reportText,
     });
     return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+// Create API Key
+export const createAPIKey = async ({ apiKeyName, domain }) => {
+  try {
+    const response = await api.post("/keys/generate", {
+      apiKeyName,
+      domain,
+    });
+    console.log("API Key Created:", response.data);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+// Get API Keys
+export const fetchAPIKeys = async () => {
+  try {
+    const response = await api.get("/keys");
+    console.log("Full API response:", response.data);
+    return response.data.apiKey || []; // Fallback to empty array
+
+  } catch (error) {
+    console.error("Error fetching API keys:", error);
+    throw error.response?.data || error.message;
+  }
+};
+
+
+
+
+
+// Update API Key
+export const updateAPIKey = async (keyId, updatedData) => {
+  try {
+    const response = await api.put(`/keys/restrict/${keyId}`, updatedData);
+    console.log("API Key Updated:", response.data);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+// Delete API Key
+export const deleteAPIKey = async (keyId) => {
+  try {
+    const response = await api.delete(`/keys/${keyId}`);
+    console.log("API Key Deleted:", response.data);
+    return response.data; 
   } catch (error) {
     throw error.response?.data || error.message;
   }
@@ -136,4 +186,11 @@ api.interceptors.response.use(
   }
 );
 
+
+
+
+
 export default api;
+
+
+
