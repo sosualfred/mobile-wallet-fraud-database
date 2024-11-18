@@ -5,6 +5,7 @@ import {
   fraudReportQuerySchema,
   fraudReportSchema,
 } from "../schema/fraudReport_schema.js";
+import mongoose from "mongoose";
 
 export const addFraudReport = async (req, res, next) => {
   try {
@@ -367,35 +368,34 @@ export const addNewReport = async (req, res, next) => {
 
 export const voteOnReport = async (req, res, next) => {
   try {
-    // Grab the fraud report ID from the request parameters
-    const { reportId } = req.params;
-    const userId = req.user.id; 
+    const { reportId } = req.body;
+    const userId = req.user?.id;
 
-    // Search for the fraud report in the database
-    
+    // Validate report ID format
+    // if (!mongoose.Types.ObjectId.isValid(reportId)) {
+    //   return res.status(400).json({ message: 'Invalid report ID format' });
+    // }
+
     const fraudReport = await FraudReportModel.findById(reportId);
 
-    // Check if the fraud report exists
-    if (!fraudReport) {
-      return res.status(404).json({ message: 'Fraud report not found' });
+    // Check if fraud report exists
+    if (!fraudReport) {return res.status(404).json({ message: 'Fraud report not found' });
     }
 
-    // Check if the user has already voted
+    // Check if user has already voted
     if (fraudReport.reporters.includes(userId)) {
       return res.status(400).json({ message: 'User has already voted' });
     }
 
-    // Add the user ID to the reporters list in the fraud report
+    // Record the vote
     fraudReport.reporters.push(userId);
-
-    // Increase the vote count by 1
     fraudReport.votes += 1;
 
-    // Save the updated fraud report
     await fraudReport.save();
 
-    res.status(200).json({ message: 'Vote added successfully' });
+    res.status(200).json({ message: 'Vote recorded successfully', votes: fraudReport.votes });
   } catch (error) {
-    next(error); // Pass error to Express error handler
+    next(error); 
   }
 };
+

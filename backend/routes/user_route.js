@@ -7,8 +7,8 @@ import {
   getUserProfile,
 
   verifyEmail,
-  deactivateUserAccount,
-  votes,
+  deactivateUserAccount
+
 
 
 } from "../controllers/user_controller.js";
@@ -31,7 +31,6 @@ userRouter.post("/api/auth/verify-email", verifyEmail);
 
 userRouter.post("/api/users/deactivate", isAuthenticated, deactivateUserAccount);
 
-userRouter.post("/api/votes",isAuthenticated, votes);
 
 
 

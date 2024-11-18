@@ -26,7 +26,7 @@ const fraudReportSchema = new Schema(
     fraudEvidence: { type: String },
     user: { type: Types.ObjectId, ref: "user" },
     reporters:[{ type: Types.ObjectId, ref: "user" }],
-    
+    votes: { type: Number, default: 0}
   },
   {
     timestamps: true,
