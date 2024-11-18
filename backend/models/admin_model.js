@@ -40,7 +40,7 @@ const AdminSchema = new Schema({
 
 adminSchema.plugin(toJSON);
 
-export const AdminModel = model('Admin',adminSchema);
+export const AdminModel = model('Admin', adminSchema);
 
 
 const updateAdminSchema = new Schema({

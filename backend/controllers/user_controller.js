@@ -3,7 +3,6 @@ import { userSchema } from "../schema/user_schema.js";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import jwt from "jsonwebtoken"
 import { mailTransporter } from "../Utils/mail.js";
 
 export const signUp = async (req, res, next) => {

@@ -17,7 +17,8 @@ adminRouter.put("/api/admin/users/update/:adminId", isAuthenticated, hasPermissi
     "deactivate_useraccount",
     "set_systemconfiguration",
     "add_admin",
-    "remove_admin"
+    "remove_admin",
+    'canUpdateAdmin'
 ), updateAdmin);
 
 adminRouter.post("/api/admin/users/add", isAuthenticated, hasPermission('canManageAdmins'), createAdmin);
