@@ -35,3 +35,7 @@ export const passwordSchema = Joi.object({
       "any.required": "Password is required.",
     }),
 });
+
+export const votesSchema = Joi.object({
+  reportId: Joi.string().required()
+})
