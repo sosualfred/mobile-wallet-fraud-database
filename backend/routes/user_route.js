@@ -8,7 +8,7 @@ import {
 
 
   verifyEmail,
-  deactivateUserAccount
+  deactivateUserAccount,
 
 
 
