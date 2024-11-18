@@ -62,25 +62,27 @@ const SubmitReport = () => {
     <div className="min-h-screen bg-gray-100">
       <Navbar />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-5 mb-6">
-          <button onClick={() => navigate("/")} className="text-blue-900">
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-          <h1 className="text-2xl font-semibold">Search Results</h1>
-        </div>
+      {/* Centered container with adjusted width */}
+      <div className="flex justify-center py-10">
+        <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center gap-5 mb-6">
+            <button onClick={() => navigate("/")} className="text-blue-900">
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+            <h1 className="text-2xl font-semibold">Search Results</h1>
+          </div>
 
-        <div className="bg-white shadow-md rounded-lg p-6">
+          {/* Content inside the card */}
           <div className="flex flex-col items-center mb-6">
             <p className="text-gray-500 mb-2">Profile</p>
             {reportData.fraudImage ? (
               <img
                 src={reportData.fraudImage}
                 alt="Profile"
-                className="rounded-full w-24 h-24 object-cover mb-2"
+                className="w-24 h-24 rounded-full object-cover mb-2"
               />
             ) : (
-              <div className="rounded-full w-24 h-24 bg-gray-200 flex items-center justify-center text-gray-400 text-2xl font-bold mb-2">
+              <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded-full text-gray-400 text-2xl font-bold mb-2">
                 {reportData.fraudFirstName[0]}
                 {reportData.fraudLastName[0]}
               </div>
@@ -105,7 +107,7 @@ const SubmitReport = () => {
           </div>
 
           <h2 className="text-xl font-semibold mb-4">Comments</h2>
-          <div className="mb-6">
+          <div className="mb-4">
             <h3 className="text-lg font-medium text-blue-600 mb-2">
               Reported by: Isaac Osei
             </h3>
@@ -116,21 +118,17 @@ const SubmitReport = () => {
             <textarea
               value={newReport}
               onChange={(e) => setNewReport(e.target.value)}
-              placeholder="Write your report here..."
-              className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              className="w-full border rounded-lg p-2 mb-4"
+              rows="4"
+              placeholder="Add your comment here..."
             />
-            <div className="flex justify-between items-center mt-4">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center"
-              >
-                <Send className="w-4 h-4 mr-2" />
-                {isSubmitting ? "Submitting..." : "Submit Report"}
-              </button>
-              <Paperclip className="text-gray-500 cursor-pointer" />
-            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </button>
           </form>
         </div>
       </div>

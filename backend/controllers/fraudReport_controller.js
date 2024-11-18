@@ -7,6 +7,7 @@ import {
 } from "../schema/fraudReport_schema.js";
 import mongoose from "mongoose";
 
+
 export const addFraudReport = async (req, res, next) => {
   try {
     // Prepare the report data, including file uploads
@@ -25,9 +26,12 @@ export const addFraudReport = async (req, res, next) => {
 
     // Get the user ID from the session or request
     const userId = req.session?.user?.id || req?.user?.id;
+    console.log("User ID:", userId); // Log user ID for debugging
 
     // Find the user
     const user = await UserModel.findById(userId);
+    console.log("Fetched User:", user); // Log fetched user object
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -46,7 +50,6 @@ export const addFraudReport = async (req, res, next) => {
     user.fraudReport.push(newReport._id);
     await user.save();
 
-    
     // Send the response
     res.status(201).json({
       message: "Your fraud report has been successfully submitted.",
@@ -54,12 +57,68 @@ export const addFraudReport = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error in addFraudReport:", error);
+    
     if (error.name === "ValidationError") {
       return res.status(400).json({ message: error.message });
     }
+    
     next(error);
   }
 };
+
+// export const addFraudReport = async (req, res, next) => {
+//   try {
+//     // Prepare the report data, including file uploads
+//     const reportData = {
+//       ...req.body,
+//       mobileMoneyProvider: req.body.mobileMoneyProvider.toLowerCase(),
+//       fraudImage: req.files?.fraudImage?.[0]?.filename,
+//       fraudEvidence: req.files?.fraudEvidence?.[0]?.filename,
+//     };
+
+//     // Validate the report data
+//     const { error, value } = fraudReportSchema.validate(reportData);
+//     if (error) {
+//       return res.status(400).json({ message: error.details[0].message });
+//     }
+
+//     // Get the user ID from the session or request
+//     const userId = req.session?.user?.id || req?.user?.id;
+
+//     // Find the user
+//     const user = await UserModel.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Create the new fraud report
+//     const newReport = await FraudReportModel.create({
+//       ...value,
+//       user: userId,
+//       reporterFirstName: user.firstName,
+//       reporterLastName: user.lastName,
+//       reporterEmail: user.email,
+//       reporterPhoneNumber: user.phoneNumber,
+//     });
+
+//     // Add the report to the user's fraudReport array
+//     user.fraudReport.push(newReport._id);
+//     await user.save();
+
+    
+//     // Send the response
+//     res.status(201).json({
+//       message: "Your fraud report has been successfully submitted.",
+//       report: newReport,
+//     });
+//   } catch (error) {
+//     console.error("Error in addFraudReport:", error);
+//     if (error.name === "ValidationError") {
+//       return res.status(400).json({ message: error.message });
+//     }
+//     next(error);
+//   }
+// };
 
 // export const addFraudReport = async (req, res, next) => {
 //   try {
@@ -230,37 +289,84 @@ export const checkANumber = async (req, res, next) => {
   }
 };
 
+
 export const getFraudReports = async (req, res, next) => {
   try {
+    // Ensure user is authenticated
+    const userId = req.session?.user?.id || req?.user?.id;
+    if (!userId) {
+      return res.status(403).json({ message: "You do not have permission to view these reports." });
+    }
+
     // Validate query parameters
     const { error, value } = fraudReportQuerySchema.validate(req.query);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { phoneNumber, status, startDate, endDate, userReportsOnly } = value;
+    const { phoneNumber, status, startDate, endDate } = value;
 
     // Build query
-    let query = {};
+    let query = { user: userId }; // Filter by authenticated user's ID
+
     if (phoneNumber) query.phoneNumber = phoneNumber;
     if (status) query.status = status;
+    
+    // Handle date range filtering
     if (startDate || endDate) {
       query.dateReported = {};
       if (startDate) query.dateReported.$gte = new Date(startDate);
       if (endDate) query.dateReported.$lte = new Date(endDate);
     }
-    if (userReportsOnly) query.user = req.user.id;
 
     // Execute query
     const reports = await FraudReportModel.find(query)
       .sort({ dateReported: -1 })
       .populate("user", "firstName lastName email");
 
+    // Check if reports were found
+    if (!reports.length) {
+      return res.status(404).json({ message: "No fraud reports found for your account." });
+    }
+
     res.status(200).json({ reports });
   } catch (error) {
+    console.error("Error fetching fraud reports:", error);
     next(error);
   }
 };
+
+// export const getFraudReports = async (req, res, next) => {
+//   try {
+//     // Validate query parameters
+//     const { error, value } = fraudReportQuerySchema.validate(req.query);
+//     if (error) {
+//       return res.status(400).json({ message: error.details[0].message });
+//     }
+
+//     const { phoneNumber, status, startDate, endDate, userReportsOnly } = value;
+
+//     // Build query
+//     let query = {};
+//     if (phoneNumber) query.phoneNumber = phoneNumber;
+//     if (status) query.status = status;
+//     if (startDate || endDate) {
+//       query.dateReported = {};
+//       if (startDate) query.dateReported.$gte = new Date(startDate);
+//       if (endDate) query.dateReported.$lte = new Date(endDate);
+//     }
+//     if (userReportsOnly) query.user = req.user.id;
+
+//     // Execute query
+//     const reports = await FraudReportModel.find(query)
+//       .sort({ dateReported: -1 })
+//       .populate("user", "firstName lastName email");
+
+//     res.status(200).json({ reports });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 export const getPublicFraudReports = async (req, res, next) => {
   try {
