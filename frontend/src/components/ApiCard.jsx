@@ -104,7 +104,20 @@ const ExternalLinkModal = ({ onClose }) => {
             <Trash2 className="cursor-pointer text-red-600" />
           </div>
         </div>
-
+        <div className="bg-gray-100 rounded-md p-2">
+          <div class="flex justify-between items-center">
+            <span>API Key:</span>
+            <span class="api-key" className="flex gap-2">gjabhdh72868983anmbahngaj79369716<span className="text-blue-600" /></span>
+          </div>
+          <div class="flex justify-between items-center mt-2">
+            <span>Date Created :</span>
+            <span class="api-key">Apr23,2024</span>
+          </div>
+          <div class="flex justify-between items-center mt-2">
+            <span>Status :</span>
+            <span class="api-key" className="text-sm bg-green-200 text-green-800 px-1 font-bold rounded-md flex items-center ml-2">Active</span>
+          </div>
+        </div>
         {isChecked ? (
           <div className="mt-6 bg-gray-100 rounded-md p-2">
             <h1>Domain Restriction</h1>
