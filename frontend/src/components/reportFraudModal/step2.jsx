@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { step2Schema } from "../../utils/validationSchemas";
-import { checkExistingReport } from "../../services/api";
+import { checkExistingReport, reportFraud } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 
 const Step2FraudReport = ({
@@ -13,6 +13,7 @@ const Step2FraudReport = ({
 }) => {
   const { user, isAuthenticated } = useAuth();
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const evidenceInputRef = useRef(null);
   const imageInputRef = useRef(null);
 
@@ -29,6 +30,7 @@ const Step2FraudReport = ({
           setIsAlreadyReported(!!existingReport);
         } catch (error) {
           console.error("Error checking existing report:", error);
+          setErrors({ ...errors, phoneCheck: "Failed to check phone number. Please try again later." });
         }
       } else {
         setIsAlreadyReported(false);
@@ -48,6 +50,7 @@ const Step2FraudReport = ({
   };
 
   const validateForm = async () => {
+    setIsLoading(true);
     try {
       await step2Schema.validate(formData, { abortEarly: false });
       setErrors({});
@@ -59,6 +62,8 @@ const Step2FraudReport = ({
       });
       setErrors(newErrors);
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,23 +71,41 @@ const Step2FraudReport = ({
     e.preventDefault();
     const isValid = await validateForm();
     if (isValid) {
-      // Create a new object with only the relevant fields for Step 2
-      const submissionData = {
-        fraudPhoneNumber: formData.fraudPhoneNumber,
-        mobileMoneyProvider: formData.mobileMoneyProvider,
-        fraudFirstName: formData.fraudFirstName,
-        fraudLastName: formData.fraudLastName,
-        fraudDescription: formData.fraudDescription,
-        fraudImage: formData.fraudImage,
-        fraudEvidence: formData.fraudEvidence,
-      };
-
-      onSubmit(submissionData);
+      const submissionData = new FormData();
+      submissionData.append("reporterFirstName", formData.firstName);
+      submissionData.append("reporterLastName", formData.lastName);
+      submissionData.append("reporterPhoneNumber", formData.phoneNumber);
+      submissionData.append("reporterEmail", formData.email);
+      submissionData.append("fraudPhoneNumber", formData.fraudPhoneNumber);
+      submissionData.append("mobileMoneyProvider", formData.mobileMoneyProvider);
+      submissionData.append("fraudFirstName", formData.fraudFirstName);
+      submissionData.append("fraudLastName", formData.fraudLastName);
+      submissionData.append("fraudDescription", formData.fraudDescription);
+      if (formData.fraudImage) {
+        submissionData.append("fraudImage", formData.fraudImage);
+      }
+      if (formData.fraudEvidence) {
+        submissionData.append("fraudEvidence", formData.fraudEvidence);
+      }
+  
+      try {
+        // Move the declaration of response here
+        const response = await reportFraud(submissionData);
+        console.log("Submission successful:", response);
+        onSubmit({
+          submissionData,
+          successMessage: "Your fraud report has been successfully submitted. Thank you for your contribution."
+        });
+      } catch (error) {
+        console.error("Failed to report fraud:", error);
+        setErrors({ submit: "Failed to submit. Please try again later." });
+      }
     }
   };
 
   return (
     <div className="w-full bg-white">
+      {isLoading && <div className="text-center py-2">Validating, please wait...</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex items-center justify-between pb-2 border-b">
           <h2 className="text-2xl font-bold">Report fraudulent number</h2>
@@ -113,11 +136,9 @@ const Step2FraudReport = ({
             </p>
           </div>
         )}
-
         <p className="text-lg text-gray-600 mb-4">
-          Details of the person and about the fraud.
+          Details of the person and about the fraud...
         </p>
-
         <div className="mb-4">
           <div className="flex flex-col">
             <label htmlFor="fraudPhoneNumber" className="mb-1 text-gray-700">

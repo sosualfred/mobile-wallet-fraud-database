@@ -88,4 +88,4 @@ const FraudReportModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default FraudReportModal;
+export default FraudReportModal; 
