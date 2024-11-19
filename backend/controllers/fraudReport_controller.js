@@ -5,6 +5,7 @@ import {
   fraudReportQuerySchema,
   fraudReportSchema,
 } from "../schema/fraudReport_schema.js";
+import mongoose from "mongoose";
 
 
 export const addFraudReport = async (req, res, next) => {
@@ -469,3 +470,38 @@ export const addNewReport = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const voteOnReport = async (req, res, next) => {
+  try {
+    const { reportId } = req.body;
+    const userId = req.user?.id;
+
+    // Validate report ID format
+    // if (!mongoose.Types.ObjectId.isValid(reportId)) {
+    //   return res.status(400).json({ message: 'Invalid report ID format' });
+    // }
+
+    const fraudReport = await FraudReportModel.findById(reportId);
+
+    // Check if fraud report exists
+    if (!fraudReport) {return res.status(404).json({ message: 'Fraud report not found' });
+    }
+
+    // Check if user has already voted
+    if (fraudReport.reporters.includes(userId)) {
+      return res.status(400).json({ message: 'User has already voted' });
+    }
+
+    // Record the vote
+    fraudReport.reporters.push(userId);
+    fraudReport.votes += 1;
+
+    await fraudReport.save();
+
+    res.status(200).json({ message: 'Vote recorded successfully', votes: fraudReport.votes });
+  } catch (error) {
+    next(error); 
+  }
+};
+
