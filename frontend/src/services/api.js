@@ -31,24 +31,54 @@ export const login = async (credentials) => {
   }
 };
 
-export const submitFraudReport = async (reportData) => {
+// export const submitFraudReport = async (reportData) => {
+//   try {
+//     const response = await api.post("/fraud/report", reportData);
+//     return response.data;
+//   } catch (error) {
+//     throw error.response?.data || error.message;
+//   }
+// };
+
+export const reportFraud = async (fraudData) => {
+  // Retrieve the token from local storage
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await api.post("/fraud/report", reportData);
+    const response = await api.post('/fraud/report',
+      fraudData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message;
+    console.error('Error reporting fraud:', error.response ? error.response.data : error.message);
+    throw error;
   }
 };
+
+// export const checkExistingReport = async (phone) => {
+//   try {
+//     const response = await api.get(`/fraud/check/${phone}`);
+//     return response.data;
+//   } catch (error) {
+//     if (error.response?.status === 404) {
+//       return null;
+//     }
+//     throw error.response?.data || error.message;
+//   }
+// };
 
 export const checkExistingReport = async (phoneNumber) => {
   try {
     const response = await api.get(`/fraud/check/${phoneNumber}`);
     return response.data;
   } catch (error) {
-    if (error.response?.status === 404) {
-      return null;
-    }
-    throw error.response?.data || error.message;
+    console.error('Error checking existing report:', error);
+    throw error;
   }
 };
 
