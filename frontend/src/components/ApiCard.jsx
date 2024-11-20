@@ -260,13 +260,21 @@ const ApiCard = () => {
         try {
           const keys = await fetchAPIKeys();
           console.log("Fetched keys:", keys);
-          setApiKeys(Array.isArray(keys) ? keys : []);
+  
+          // Sort keys by createdAt in descending order
+          const sortedKeys = Array.isArray(keys)
+            ? keys.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            : [];
+  
+          setApiKeys(sortedKeys);
         } catch (error) {
           console.error("Error fetching API keys:", error);
+        } finally {
+          setLoading(false);
         }
       }
     };
-
+  
     loadAPIKeys();
   }, [user]);
 
