@@ -5,7 +5,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Home from './pages/home';
 import AccountPage from './pages/accountpage';
 
-import ApiKey from "./pages/apikey"
+// import ApiKey from "./pages/apikey"n
 
 import SearchModal from './components/searchmodal';
 import SubmitReport from './components/submitreport';
