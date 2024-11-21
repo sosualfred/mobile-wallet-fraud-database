@@ -10,6 +10,9 @@ import "dotenv/config";
 import expressOasGenerator from "@mickeymond/express-oas-generator";
 import cors from "cors";
 import mongoose from "mongoose";
+import { adminPasswordRouter } from "./routes/adminResetPassword_route.js";
+import { adminRouter } from "./routes/admin_route.js";
+import networkProviderRouter from "./routes/networkProvider_route.js";
 
 const app = express();
 
@@ -20,7 +23,7 @@ expressOasGenerator.handleResponses(app, {
     "auth",
     "fraud",
     "key"
-    
+
   ],
   mongooseModels: mongoose.modelNames(),
 });
@@ -48,6 +51,9 @@ app.use(userRouter);
 app.use(passwordRouter);
 app.use(fraudReportRouter);
 app.use(apiRouter);
+app.use(adminPasswordRouter);
+app.use(adminRouter);
+app.use(networkProviderRouter);
 
 expressOasGenerator.handleRequests();
 app.use((req, res) => res.redirect('/api-docs/'));

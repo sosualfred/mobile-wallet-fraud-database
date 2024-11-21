@@ -1,92 +1,163 @@
-import React, { useState } from 'react';
-import { CodeXml, FileCode, DatabaseIcon } from 'lucide-react';
-import SearchInput from "../components/searchInput";
-import ApiCard from '../components/apiCard';
-import Navbar from '../components/Navbar';
-import ReportedCard from '../components/reportedCard';
-import DocumentCard from '../components/documentCard';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { CodeXml, FileCode, Database } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { searchFraudReport } from "../services/api";
+import SearchInput from "../components/SearchInput";
+import Navbar from "../components/Navbar";
 import Button from "../components/button";
+import ReportedCard from "../components/ReportedCard";
+import ApiCard from "../components/ApiCard";
+import DocumentCard from "../components/DocumentCard";
 
 const Home = () => {
-    
-    const [visibleCard, setVisibleCard] = useState('API-keys');
-    const handleLinkClick = (cardId) => {
-        setVisibleCard(cardId);
-    };
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("reported");
+  const navigate = useNavigate();
 
-    return (
-        <div>
-            <Navbar />
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) {
+      alert("Please enter a phone number to search.");
+      return;
+    }
+    try {
+      const result = await searchFraudReport(searchTerm);
+      if (result) {
+        navigate(`/submit/${searchTerm}`, { state: { reportData: result } });
+      } else {
+        alert("No report found for this number.");
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      alert("An error occurred while searching. Please try again.");
+    }
+  };
 
-            <h1 className='text-center justify-normal text-3xl font-semibold mt-6 '>Real-time database to curb <br /> mobile money fraud.</h1>
-
-            <div className='flex justify-center mt-9 '>
-                <div className='w-full max-w-md'>
-                    <SearchInput />
-                </div>
-                <a href="/search">
-                <button
-                  type="button"
-                  className="rounded-md bg-white px-2.5 py-2.5 ml-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  Search
-                </button>
-                </a>
+  const renderContent = () => {
+    switch (activeTab) {
+      case "api":
+        return user ? (
+          <ApiCard />
+        ) : (
+          <div className="text-center mt-8">
+            <h2 className="text-lg mb-6">
+              Login or sign up to create and manage API Keys for third party
+              integration
+            </h2>
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Link to="/login">
+                <Button variant="outline" className="w-full sm:w-auto">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="solid" className="w-full sm:w-auto">
+                  Sign up
+                </Button>
+              </Link>
             </div>
-
-            <div className='mt-5'>
-                <header className='flex justify-center items-center  '>
-
-                    <div className="relative top-14 transform -translate-y-1/2 w-[53.5vw] border-t border-gray-300 "></div>
-
-                    <div className='absolute flex justify-center items-center gap-10 top-[287px] '>
-
-                        <div onClick={() => handleLinkClick('API-keys')} className="cursor-pointer  flex flex-col items-center gap-4 py-3 group  z-10">
-                            <span className='flex gap-2 text-gray-500'><CodeXml /> API Keys</span>
-                            <span className='h-0.5 rounded-full w-60 bg-transparent transition-all group-hover:w-60 group-hover:bg-blue-500 group-focus-visible:bg-slate-200'></span>
-                        </div>
-
-                        <div onClick={() => handleLinkClick('Reported')} className="cursor-pointer flex flex-col items-center gap-4 py-3 group relative z-10">
-                            <span className='flex gap-2 text-gray-500'><DatabaseIcon /> Reported Numbers</span>
-                            <span className='h-0.5 rounded-full w-64  bg-transparent transition-all group-hover:w-64 group-hover:bg-blue-500 group-focus-visible:bg-slate-200'></span>
-                        </div>
-
-                        <div onClick={() => handleLinkClick('Documentation')} className="cursor-pointer flex flex-col items-center gap-4 py-3 group relative z-10">
-                            <span className='flex gap-2 text-gray-500'><FileCode /> Documentation</span>
-                            <span className='h-0.5 rounded-full w-60  bg-transparent transition-all group-hover:w-60 group-hover:bg-blue-500 group-focus-visible:bg-slate-200'></span>
-                        </div>
-                    </div>
-
-
-                </header>
+          </div>
+        );
+      case "reported":
+        return user ? (
+          <ReportedCard />
+        ) : (
+          <div className="text-center mt-8">
+            <h2 className="text-lg mb-6">
+              Login or sign up to view fraudulent numbers that you have reported
+            </h2>
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Link to="/login">
+                <Button variant="outline" className="w-full sm:w-auto">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="solid" className="w-full sm:w-auto">
+                  Sign up
+                </Button>
+              </Link>
             </div>
+          </div>
+        );
+      case "documentation":
+        return <DocumentCard />;
+      default:
+        return null;
+    }
+  };
 
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow flex flex-col items-center px-4 pt-8">
+        <h1 className="text-center text-3xl md:text-4xl font-semibold mb-8">
+          Real-time database to curb
+          <br />
+          mobile money fraud.
+        </h1>
 
-
-
-
-
-            <main>
-                {visibleCard === 'API-keys' && (
-                    <div id='API keys' className='pt-28'>
-                        <ApiCard />
-                    </div>
-                )}
-
-                {visibleCard === 'Reported' && (
-                    <div id='Reported' className='pt-28'>
-                        <ReportedCard />
-                    </div>
-                )}
-
-                {visibleCard === 'Documentation' && (
-                    <div id='Documentation' className='pt-28'>
-                        <DocumentCard />
-                    </div>
-                )}
-            </main>
+        <div className="w-full max-w-2xl mb-12 px-4">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row">
+            <SearchInput
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search for fraudulent mobile money number"
+              className="flex-grow mb-4 sm:mb-0 sm:mr-2"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors w-full sm:w-auto"
+            >
+              Search
+            </button>
+          </form>
         </div>
-    );
-}
+
+        <div className="w-full max-w-4xl px-4">
+          <div className="flex flex-wrap justify-center space-x-4 sm:space-x-8 md:space-x-16 mb-8">
+            <button
+              className={`flex items-center text-gray-500 mb-4 ${
+                activeTab === "api"
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-2"
+                  : ""
+              }`}
+              onClick={() => setActiveTab("api")}
+            >
+              <CodeXml size={24} className="mr-2" />
+              <span>API keys</span>
+            </button>
+            <button
+              className={`flex items-center text-gray-500 mb-4 ${
+                activeTab === "reported"
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-2"
+                  : ""
+              }`}
+              onClick={() => setActiveTab("reported")}
+            >
+              <Database size={24} className="mr-2" />
+              <span>Reported numbers</span>
+            </button>
+            <button
+              className={`flex items-center text-gray-500 mb-4 ${
+                activeTab === "documentation"
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-2"
+                  : ""
+              }`}
+              onClick={() => setActiveTab("documentation")}
+            >
+              <FileCode size={24} className="mr-2" />
+              <span>Documentation</span>
+            </button>
+          </div>
+
+          {renderContent()}
+        </div>
+      </main>
+    </div>
+  );
+};
 
 export default Home;
