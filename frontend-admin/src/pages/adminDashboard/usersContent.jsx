@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, CalendarArrowUpIcon, CalendarIcon, ChevronDown, ExternalLink, Square, Trash2 } from 'lucide-react';
-import SearchInput from "../../../../frontend/src/components/searchInput"
+import SearchInput from '../../components/SearchInput';
 import { UserMinusIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 
