@@ -9,11 +9,6 @@ import {
   deactivateUserAccount,
   initiateGoogleOAuth,
   handleGoogleCallback,
-<<<<<<< HEAD
-  deactivateUserAccount,
-  verifyEmail,
-=======
->>>>>>> bb54ff3df4e582e1e53059ad5b0cdc88606eb6f9
 } from "../controllers/user_controller.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
